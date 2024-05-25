@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">StatusMaker</string>
+    <string name="dog_image">Dog Image</string>
+    <string name="refresh">Refresh</string>
+    <string name="share">Share</string>
+    <string name="edit">Edit</string>
+    <string name="create">Create</string>
+    <string name="profile_detail">Profile Detail</string>
+    <string name="name">Name</string>
+    <string name="continue_">Continue</string>
+
+    <string name="monbile_number">Mobile Number</string>
+    <string name="edit_design">Edit Design</string>
+    <string name="choose_avatar">Choose Avatar</string>
+    <string name="capture_img">Capture image</string>
+    <string name="from_gallery">From Gallery</string>
+    <string name="download">Download</string>
+</resources>
