@@ -32,4 +32,13 @@ class HomeRepository @Inject constructor(
         }.flowOn(Dispatchers.IO)
     }
 
+    suspend fun getImagesByCatId(
+        id: String,
+        langCode: String
+    ): Flow<NetworkResult<GetAllmagesResponse>> {
+        return flow {
+            emit(safeApiCall { remoteDataSource.getImagesByCatId(id, langCode) })
+        }.flowOn(Dispatchers.IO)
+    }
+
 }

@@ -5,7 +5,9 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
+import android.os.Handler
 import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +23,7 @@ import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.RecyclerView
 import com.krisu.statusmaker.R
 import com.krisu.statusmaker.model.ImageBean
+import com.krisu.statusmaker.ui.activity.BaseActivity
 import com.krisu.statusmaker.ui.activity.EditDesignActivity
 import com.krisu.statusmaker.ui.activity.HomeActivity
 import com.krisu.statusmaker.utils.IntentConstants
@@ -36,6 +39,7 @@ class HomeRVAdapterNew(
     private val bitmapList: ArrayList<Bitmap>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var target: com.squareup.picasso.Target
+
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
     ): RecyclerView.ViewHolder {
@@ -102,7 +106,8 @@ class HomeRVAdapterNew(
                 imageView = imageView,
                 imageViewBg1 = profileBg1,
                 imageViewBg2 = profileBg2,
-                linearLayout = linearLayout
+                linearLayout = linearLayout,
+                pos = layoutPosition
             )
             editTv.setOnClickListener {
                 val intent = Intent(context, EditDesignActivity::class.java)
@@ -111,7 +116,7 @@ class HomeRVAdapterNew(
                 context.startActivity(intent)
             }
             shareTv.setOnClickListener {
-
+                (context as BaseActivity).viewToImage(container, "")
             }
         }
     }
@@ -133,7 +138,8 @@ class HomeRVAdapterNew(
                 imageView = imageView,
                 imageViewBg1 = profileImgIV,
                 linearLayout = linearLayout,
-                isBorderSet = true
+                isBorderSet = true,
+                pos = layoutPosition
             )
             editTv.setOnClickListener {
                 val intent = Intent(context, EditDesignActivity::class.java)
@@ -142,7 +148,7 @@ class HomeRVAdapterNew(
                 context.startActivity(intent)
             }
             shareTv.setOnClickListener {
-
+                (context as BaseActivity).viewToImage(container, "")
             }
 
         }
@@ -166,7 +172,8 @@ class HomeRVAdapterNew(
                 imageView = imageView,
                 imageViewBg1 = profileBg,
                 imageViewBg2 = null,
-                linearLayout = linearLayout
+                linearLayout = linearLayout,
+                pos = layoutPosition
             )
             editTv.setOnClickListener {
                 val intent = Intent(context, EditDesignActivity::class.java)
@@ -175,7 +182,7 @@ class HomeRVAdapterNew(
                 context.startActivity(intent)
             }
             shareTv.setOnClickListener {
-
+                (context as BaseActivity).viewToImage(container, "")
             }
         }
     }
@@ -199,7 +206,8 @@ class HomeRVAdapterNew(
                 imageView = imageView,
                 imageViewBg1 = profileBg1,
                 imageViewBg2 = profileBg2,
-                linearLayout = linearLayout
+                linearLayout = linearLayout,
+                pos = layoutPosition
             )
             editTv.setOnClickListener {
                 val intent = Intent(context, EditDesignActivity::class.java)
@@ -208,7 +216,7 @@ class HomeRVAdapterNew(
                 context.startActivity(intent)
             }
             shareTv.setOnClickListener {
-
+                (context as BaseActivity).viewToImage(container, "")
             }
         }
     }
@@ -327,17 +335,28 @@ class HomeRVAdapterNew(
         notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun replaceItem(arrayList: ArrayList<ImageBean>?) {
+        this.arrayList.clear()
+        if (arrayList != null) {
+            this.arrayList.addAll(arrayList)
+        }
+        notifyDataSetChanged()
+    }
+
     private fun setupImage(
         url: String,
         imageView: ImageView,
         imageViewBg1: ImageView? = null,
         imageViewBg2: ImageView? = null,
         linearLayout: LinearLayout,
-        isBorderSet: Boolean = false
+        isBorderSet: Boolean = false,
+        pos: Int
     ) {
-
+        Log.i("Pos", "==" + pos)
         target = object : com.squareup.picasso.Target {
             override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
+                Log.i("Pos1", "==" + pos)
                 imageView.setImageBitmap(bitmap)
                 bitmap?.let {
                     if (isBorderSet) {
@@ -351,9 +370,7 @@ class HomeRVAdapterNew(
                         }
                         generatePalete(it, linearLayout, 0)
                     }
-
                 }
-
             }
 
             override fun onBitmapFailed(errorDrawable: Drawable?) {
@@ -368,5 +385,6 @@ class HomeRVAdapterNew(
         Picasso.with(context)
             .load(url)
             .into(target)
+        imageView.tag = target
     }
 }

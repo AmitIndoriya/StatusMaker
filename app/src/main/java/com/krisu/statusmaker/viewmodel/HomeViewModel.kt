@@ -30,8 +30,8 @@ class HomeViewModel @Inject constructor
 
     val categoryResponse: MutableLiveData<NetworkResult<CategoryResponse>> = MutableLiveData()
     val allImageResponse: MutableLiveData<NetworkResult<GetAllmagesResponse>> = MutableLiveData()
+    val catImageResponse: MutableLiveData<NetworkResult<GetAllmagesResponse>> = MutableLiveData()
     val bitmapListLD: MutableLiveData<ArrayList<Bitmap>> = MutableLiveData()
-    //val response: LiveData<NetworkResult<CategoryResponse>> = _response
 
     fun fetchCategories(langCode: String) = viewModelScope.launch {
         repository.getCategories(langCode).collect { values ->
@@ -45,20 +45,11 @@ class HomeViewModel @Inject constructor
         }
     }
 
-    fun getBitmapList(arrayList: ArrayList<ImageBean>) {
-        GlobalScope.launch {
-            val bitmapList = ArrayList<Bitmap>()
-            try {
-                for (i in 0 until arrayList.size) {
-                    val url = URL(arrayList[i].url)
-                    val bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream())
-                    bitmapList.add(bitmap)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            bitmapListLD.postValue(bitmapList)
+    fun fetchImagesByCatId(id: String, langCode: String) = viewModelScope.launch {
+        repository.getImagesByCatId(id, langCode).collect { values ->
+            catImageResponse.value = values
         }
     }
+
 
 }

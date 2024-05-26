@@ -10,4 +10,7 @@ class RemoteDataSource @Inject constructor(private val apiService: ApiService) {
     suspend fun getAllImages(langCode: String) =
         apiService.getAllImages(langCode = langCode)
 
+    suspend fun getImagesByCatId(id: String, langCode: String) =
+        apiService.getImagesByCatId(catId = id, langCode = langCode)
+
 }

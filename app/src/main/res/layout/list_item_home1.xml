@@ -60,7 +60,7 @@
 
                         <TextView
                             android:id="@+id/number_tv"
-                            style="@style/laila_semibold_18"
+                            style="@style/laila_medium_16"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"

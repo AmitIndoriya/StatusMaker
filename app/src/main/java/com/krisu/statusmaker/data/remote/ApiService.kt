@@ -16,4 +16,7 @@ interface ApiService {
 
     @GET(Constants.GETALLIMAGES)
     suspend fun getAllImages(@Path("langCode") langCode: String): Response<GetAllmagesResponse>
+    @GET(Constants.GETIMAGESBYCATID)
+    suspend fun getImagesByCatId(@Path("catId") catId: String,@Path("langCode") langCode: String): Response<GetAllmagesResponse>
+
 }

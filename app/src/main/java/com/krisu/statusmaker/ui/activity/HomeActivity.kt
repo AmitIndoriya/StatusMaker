@@ -1,6 +1,5 @@
 package com.krisu.statusmaker.ui.activity
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -10,16 +9,12 @@ import android.view.View.OnClickListener
 import android.widget.RelativeLayout
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.flexbox.FlexDirection
-import com.google.android.flexbox.FlexboxLayoutManager
-import com.google.android.flexbox.JustifyContent
 import com.krisu.statusmaker.R
 import com.krisu.statusmaker.databinding.ActHomeLayoutBinding
 import com.krisu.statusmaker.model.CategoryBean
 import com.krisu.statusmaker.model.ImageBean
-import com.krisu.statusmaker.ui.adapter.CategoryAdapter
-import com.krisu.statusmaker.ui.adapter.HomeRVAdapter
 import com.krisu.statusmaker.ui.adapter.HomeRVAdapterNew
+import com.krisu.statusmaker.ui.dialog.CategoryBottomSheet
 import com.krisu.statusmaker.utils.NetworkResult
 import com.krisu.statusmaker.utils.PreferenceConstant
 import com.krisu.statusmaker.utils.Utils
@@ -32,6 +27,8 @@ class HomeActivity : BaseActivity(), OnClickListener {
     lateinit var binding: ActHomeLayoutBinding
     val viewModel by viewModels<HomeViewModel>()
     lateinit var adapter: HomeRVAdapterNew
+    var selectedCategory = 0
+    private lateinit var categoryBottomSheet: CategoryBottomSheet
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setFullScreen()
@@ -70,13 +67,12 @@ class HomeActivity : BaseActivity(), OnClickListener {
                     .into(binding.profileIv)
             }
         }
-
     }
 
     private fun setBottomMargin() {
         val layoutParams = binding.recyclerview.layoutParams as RelativeLayout.LayoutParams
         layoutParams.bottomMargin = getNavigationBarHeight()
-        binding.recyclerview.layoutParams = layoutParams;
+        binding.recyclerview.layoutParams = layoutParams
 
     }
 
@@ -87,12 +83,14 @@ class HomeActivity : BaseActivity(), OnClickListener {
 
     private fun fetchData() {
         fetchImages()
-        fetchCategories()
         viewModel.categoryResponse.observe(this) { response ->
             when (response) {
                 is NetworkResult.Success -> {
+
                     response.data?.let {
-                        //setCategoryRV(it.data)
+                        it.data.add(0, CategoryBean("0", "सभी"))
+                        categoryBottomSheet = CategoryBottomSheet.getInstance(it.data)
+                        categoryBottomSheet.show(supportFragmentManager, "categoryBottomSheet")
                     }
                 }
 
@@ -107,80 +105,7 @@ class HomeActivity : BaseActivity(), OnClickListener {
             when (response) {
                 is NetworkResult.Success -> {
                     response.data?.let {
-                        val arrayList1 = ArrayList<ImageBean>()
-                        arrayList1.add(
-                            ImageBean(
-                                id = "1",
-                                url = "https://www.astroganit.com/status/khatu_shyam/shyamji1.jpg",
-                                categoryId = "1",
-                                categoryName = "",
-                                langCode = "",
-                                specificDate = ""
-                            )
-                        )
-                        arrayList1.add(
-                            ImageBean(
-                                id = "1",
-                                url = "https://www.astroganit.com/status/khatu_shyam/shyamji2.jpg",
-                                categoryId = "1",
-                                categoryName = "",
-                                langCode = "",
-                                specificDate = ""
-                            )
-                        )
-                        arrayList1.add(
-                            ImageBean(
-                                id = "1",
-                                url = "https://www.astroganit.com/status/khatu_shyam/shyamji3.jpeg",
-                                categoryId = "1",
-                                categoryName = "",
-                                langCode = "",
-                                specificDate = ""
-                            )
-                        )
-                        arrayList1.add(
-                            ImageBean(
-                                id = "1",
-                                url = "https://www.astroganit.com/status/khatu_shyam/shyamji4.jpg",
-                                categoryId = "1",
-                                categoryName = "",
-                                langCode = "",
-                                specificDate = ""
-                            )
-                        )
-                        arrayList1.add(
-                            ImageBean(
-                                id = "1",
-                                url = "https://www.astroganit.com/status/khatu_shyam/shyamji5.jpeg",
-                                categoryId = "1",
-                                categoryName = "",
-                                langCode = "",
-                                specificDate = ""
-                            )
-                        )
-                        arrayList1.add(
-                            ImageBean(
-                                id = "1",
-                                url = "https://www.astroganit.com/status/khatu_shyam/shyamji6.jpg",
-                                categoryId = "1",
-                                categoryName = "",
-                                langCode = "",
-                                specificDate = ""
-                            )
-                        )
-                        arrayList1.add(
-                            ImageBean(
-                                id = "1",
-                                url = "https://www.astroganit.com/status/khatu_shyam/shyamji7.jpeg",
-                                categoryId = "1",
-                                categoryName = "",
-                                langCode = "",
-                                specificDate = ""
-                            )
-                        )
-
-                        notifyAdapter(arrayList1, null)
-                        viewModel.getBitmapList(arrayList1)
+                        addItem(it.data, null)
                     }
                 }
 
@@ -192,8 +117,21 @@ class HomeActivity : BaseActivity(), OnClickListener {
                 }
             }
         }
-        viewModel.bitmapListLD.observe(this) {
-            //adapter.addBitmap(it)
+        viewModel.catImageResponse.observe(this) { response ->
+            when (response) {
+                is NetworkResult.Success -> {
+                    response.data?.let {
+                        replaceItem(it.data)
+                    }
+                }
+
+                is NetworkResult.Error -> {
+                }
+
+                is NetworkResult.Loading -> {
+
+                }
+            }
         }
     }
 
@@ -205,13 +143,13 @@ class HomeActivity : BaseActivity(), OnClickListener {
         viewModel.fetchImages("2")
     }
 
-    private fun setCategoryRV(arrayList: ArrayList<CategoryBean>) {
-        val layoutManager = FlexboxLayoutManager(this)
-        layoutManager.flexDirection = FlexDirection.COLUMN;
-        layoutManager.justifyContent = JustifyContent.FLEX_END;
-        binding.recyclerview.layoutManager = layoutManager
-        val adapter = CategoryAdapter(this, arrayList)
-        binding.recyclerview.adapter = adapter
+    fun fetchImagesById(id: String) {
+        if (id == "0") {
+            fetchImages()
+        } else {
+            viewModel.fetchImagesByCatId(id, "2")
+        }
+        categoryBottomSheet.dismiss()
     }
 
     private fun setRVAdapter() {
@@ -223,14 +161,18 @@ class HomeActivity : BaseActivity(), OnClickListener {
         binding.recyclerview.adapter = adapter
     }
 
-    private fun notifyAdapter(arrayList: ArrayList<ImageBean>?, bitmapList: ArrayList<Bitmap>?) {
+    private fun addItem(arrayList: ArrayList<ImageBean>?, bitmapList: ArrayList<Bitmap>?) {
         adapter.addItem(arrayList, bitmapList)
+    }
+
+    private fun replaceItem(arrayList: ArrayList<ImageBean>?) {
+        adapter.replaceItem(arrayList)
     }
 
     override fun onClick(v: View) {
         when (v.id) {
             R.id.cat_iv -> {
-
+                fetchCategories()
             }
 
             R.id.profile_iv -> {
