@@ -5,10 +5,13 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.View
+import android.view.View.OnClickListener
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import com.krisu.statusmaker.R
 import com.krisu.statusmaker.databinding.ActProfileLayoutBinding
 import com.krisu.statusmaker.model.ProfileDetailModel
 import com.krisu.statusmaker.ui.dialog.ProfileImgChooserBottomSheet
@@ -23,7 +26,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class ProfileActivity : BaseActivity() {
+class ProfileActivity : BaseActivity(), OnClickListener {
     private val viewModel by viewModels<ProfileViewModel>()
     private lateinit var binding: ActProfileLayoutBinding
     private val permissionHelper = PermissionHelper(this)
@@ -82,6 +85,9 @@ class ProfileActivity : BaseActivity() {
     }
 
     private fun setListeners() {
+        binding.backIv.setOnClickListener {
+            finish()
+        }
         binding.profileImgContainer.setOnClickListener {
             val modal = ProfileImgChooserBottomSheet()
             supportFragmentManager.let { modal.show(it, ProfileImgChooserBottomSheet.TAG) }/*showImagePicDialog()
@@ -89,7 +95,10 @@ class ProfileActivity : BaseActivity() {
         }
 
         binding.continueBtn.setOnClickListener {
-            if (imageuri != null && !TextUtils.isEmpty(binding.nameEt.text)) {
+            val isAvatarSelected = Utils.getBooleanInSP(
+                this, PreferenceConstant.IS_AVATAR_SELECTED
+            )
+            if ((imageuri != null || isAvatarSelected) && !TextUtils.isEmpty(binding.nameEt.text)) {
                 profileDetail.name = binding.nameEt.text.toString()
                 profileDetail.mobileNumber = binding.phoneNumberEt.text.toString()
                 Utils.saveStringInSP(
@@ -177,25 +186,37 @@ class ProfileActivity : BaseActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            val result: CropImage.ActivityResult = CropImage.getActivityResult(data)
-            if (resultCode == RESULT_OK) {
-                imageuri = result.uri
-                profileDetail.imageUrl = imageuri.toString()
-                Utils.saveBooleanInSP(this, PreferenceConstant.IS_AVATAR_SELECTED, false)
-                Utils.saveStringInSP(this, PreferenceConstant.PROFILE_IMG, imageuri.toString())
-                Utils.saveIntInSP(this, PreferenceConstant.AVATAR_ID, -1)
-                Picasso.with(this).load(imageuri).into(binding.profileImg)
-            }
-        } else if (requestCode == AVATAR_REQ_CODE) {
-            if (resultCode == RESULT_OK) {
-                val avatarId = data?.getIntExtra(IntentConstants.AVATAR_ID, -1)
-                if (avatarId != null && avatarId != -1) {
-                    Utils.saveBooleanInSP(this, PreferenceConstant.IS_AVATAR_SELECTED, true)
-                    Utils.saveStringInSP(this, PreferenceConstant.PROFILE_IMG, "")
-                    Utils.saveIntInSP(this, PreferenceConstant.AVATAR_ID, avatarId)
-                    viewModel.getAvatarList()
+        if (data != null) {
+
+
+            if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+                val result: CropImage.ActivityResult = CropImage.getActivityResult(data)
+                if (resultCode == RESULT_OK) {
+                    imageuri = result.uri
+                    profileDetail.imageUrl = imageuri.toString()
+                    Utils.saveBooleanInSP(this, PreferenceConstant.IS_AVATAR_SELECTED, false)
+                    Utils.saveStringInSP(this, PreferenceConstant.PROFILE_IMG, imageuri.toString())
+                    Utils.saveIntInSP(this, PreferenceConstant.AVATAR_ID, -1)
+                    Picasso.with(this).load(imageuri).into(binding.profileImg)
                 }
+            } else if (requestCode == AVATAR_REQ_CODE) {
+                if (resultCode == RESULT_OK) {
+                    val avatarId = data?.getIntExtra(IntentConstants.AVATAR_ID, -1)
+                    if (avatarId != null && avatarId != -1) {
+                        Utils.saveBooleanInSP(this, PreferenceConstant.IS_AVATAR_SELECTED, true)
+                        Utils.saveStringInSP(this, PreferenceConstant.PROFILE_IMG, "")
+                        Utils.saveIntInSP(this, PreferenceConstant.AVATAR_ID, avatarId)
+                        viewModel.getAvatarList()
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.back_iv -> {
+                finish()
             }
         }
     }

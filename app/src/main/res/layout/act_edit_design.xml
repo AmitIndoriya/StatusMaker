@@ -200,7 +200,7 @@
 
 
             <TextView
-                android:id="@+id/edit_tv"
+                android:id="@+id/download_tv"
                 style="@style/laila_semibold_18"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

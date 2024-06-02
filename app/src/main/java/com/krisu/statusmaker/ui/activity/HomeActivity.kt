@@ -8,6 +8,7 @@ import android.text.TextUtils
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.krisu.statusmaker.R
@@ -181,7 +182,7 @@ class HomeActivity : BaseActivity(), OnClickListener {
             }
 
             R.id.create_tv -> {
-
+                Toast.makeText(this@HomeActivity, "Coming soon", Toast.LENGTH_SHORT).show()
             }
 
         }

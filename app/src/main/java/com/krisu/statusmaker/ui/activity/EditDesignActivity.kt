@@ -9,6 +9,7 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.widget.FrameLayout
 import android.widget.RelativeLayout
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
@@ -93,6 +94,8 @@ class EditDesignActivity : BaseActivity(), OnClickListener {
 
     private fun setListeners() {
         binding.shareTv.setOnClickListener(this)
+        binding.backIv.setOnClickListener(this)
+        binding.downloadTv.setOnClickListener(this)
     }
 
     private fun textChangeListeners() {
@@ -126,6 +129,14 @@ class EditDesignActivity : BaseActivity(), OnClickListener {
             R.id.share_tv -> {
                 val fragment = adapter.getItem(binding.viewPager.currentItem) as EditDesignFragment
                 viewToImage(fragment.getViewToShare(), "")
+            }
+
+            R.id.back_iv -> {
+                finish()
+            }
+
+            R.id.download_tv -> {
+                Toast.makeText(this@EditDesignActivity, "Coming Soon", Toast.LENGTH_LONG).show()
             }
         }
     }
