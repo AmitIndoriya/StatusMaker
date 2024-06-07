@@ -15,4 +15,8 @@
     <string name="from_gallery">From Gallery</string>
     <string name="download">Download</string>
     <string name="choose_category">Choose Category</string>
+    <string name="create_status">Create Status</string>
+    <string name="finish">Finish</string>
+    <string name="next">Next</string>
+    <string name="type_your_text_here">Type your text here</string>
 </resources>

@@ -182,7 +182,7 @@ class HomeActivity : BaseActivity(), OnClickListener {
             }
 
             R.id.create_tv -> {
-                Toast.makeText(this@HomeActivity, "Coming soon", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this@HomeActivity, CreateStatusActivity::class.java))
             }
 
         }

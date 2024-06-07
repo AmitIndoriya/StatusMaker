@@ -15,4 +15,62 @@
     <color name="purple_color">#7c1779</color>
     <color name="gray_E9EAEC">#E9EAEC</color>
     <color name="green_008000">#008000</color>
+
+    <color name="gold">#fff3bb21</color>
+    <color name="pink">#FFC0CB</color>
+
+
+    <color name="color1">#403b37</color>
+    <color name="color2">#4a5567</color>
+    <color name="color3">#a1aebf</color>
+    <color name="color4">#e1e8f0</color>
+    <color name="color5">#f6fafd</color>
+    <color name="color6">#444190</color>
+    <color name="color7">#4e50be</color>
+    <color name="color8">#667dec</color>
+    <color name="color9">#819af6</color>
+    <color name="color10">#c2defd</color>
+    <color name="color11">#553c9a</color>
+    <color name="color12">#805ad4</color>
+    <color name="color13">#9f7aeb</color>
+    <color name="color14">#d4bdfa</color>
+    <color name="color15">#e8d8fd</color>
+    <color name="color16">#9b246d</color>
+    <color name="color17">#d63f8c</color>
+    <color name="color18">#ec64a6</color>
+    <color name="color19">#fbb5cd</color>
+    <color name="color20">#fedde6</color>
+    <color name="color21">#732a2b</color>
+    <color name="color22">#c53131</color>
+    <color name="color23">#f56565</color>
+    <color name="color24">#feb2b2</color>
+    <color name="color25">#ffeded</color>
+    <color name="color26">#9d411e</color>
+    <color name="color27">#df6b21</color>
+    <color name="color28">#f7ad56</color>
+    <color name="color29">#fbd38c</color>
+    <color name="color30">#feecc8</color>
+    <color name="color31">#965916</color>
+    <color name="color32">#b67920</color>
+    <color name="color33">#ecc948</color>
+    <color name="color34">#f9f184</color>
+    <color name="color35">#feffd2</color>
+    <color name="color36">#266749</color>
+    <color name="color37">#2e855a</color>
+    <color name="color38">#48bb78</color>
+    <color name="color39">#9ae6b5</color>
+    <color name="color40">#d6ffe1</color>
+    <color name="color41">#2b5282</color>
+    <color name="color42">#2b6cb0</color>
+    <color name="color43">#4099e4</color>
+    <color name="color44">#8fcdf4</color>
+    <color name="color45">#ccedff</color>
+
+    <color name="seek_bar_background">#ababab</color>
+    <color name="seek_bar_progress">#ffb600</color>
+    <color name="seek_bar_secondary_progress">#3399CC</color>
+    <color name="light_green_new">#DFFFD9</color>
+    <color name="dark_green_new">#027148</color>
+    <color name="text_color">#5b5b5b</color>
+
 </resources>

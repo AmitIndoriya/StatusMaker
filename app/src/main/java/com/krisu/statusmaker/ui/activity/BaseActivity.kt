@@ -5,10 +5,15 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
+import android.os.Build
 import android.view.View
+import android.view.Window
 import android.view.WindowManager
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import com.krisu.statusmaker.R
+import com.krisu.statusmaker.utils.CacheStore
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -89,5 +94,30 @@ open class BaseActivity : AppCompatActivity() {
             }*/
             startActivity(Intent.createChooser(shareIntent, "Choose an app"))
         }
+    }
+
+    fun saveImageInCache(view: View) {
+        val bitmap = viewToImage(view, "")
+        CacheStore.getInstance().saveCacheFile("bitmap", bitmap)
+    }
+
+    fun getImageFromCache(): Bitmap {
+        return CacheStore.getInstance().getCacheFile("bitmap")
+    }
+
+    fun setStatusBarColor(color: Int) {
+        val window: Window = this.window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.statusBarColor = this.resources.getColor(color, null)
+        setSystemNavigationColor()
+    }
+
+
+    fun setSystemNavigationColor() {
+        val window: Window = this.window
+        window.navigationBarColor = this.resources.getColor(R.color.white)
+        window.decorView.systemUiVisibility =
+            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
     }
 }
