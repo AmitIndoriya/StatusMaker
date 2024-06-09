@@ -10,13 +10,19 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.krisu.statusmaker.R
 import com.krisu.statusmaker.ui.activity.CreateStatusActivity
+import com.krisu.statusmaker.ui.fragment.CreateStatusFragment
+import com.krisu.statusmaker.ui.fragment.FontFragment
+import com.krisu.statusmaker.ui.fragment.ShadowFragment
+import com.krisu.statusmaker.ui.fragment.ShareStatusFragment
 
 
 class ColorAdapter(
-    private val context: CreateStatusActivity
+    private val context: CreateStatusActivity,
+    val fragment: Fragment?
 ) : RecyclerView.Adapter<ColorAdapter.CourseViewHolder>() {
     private var selectedPos: Int = 0
     private val colorList: IntArray = intArrayOf(
@@ -89,7 +95,9 @@ class ColorAdapter(
             holder.linearLayout.setBackgroundResource(R.drawable.circle_light_gray)
         }
         holder.imageView.setOnClickListener {
-            //context.changeColor(colorList[position])
+            if (fragment is ShareStatusFragment) {
+                fragment.changeColor(colorList[position])
+            }
         }
         val params: LinearLayout.LayoutParams =
             holder.linearLayout.layoutParams as LinearLayout.LayoutParams

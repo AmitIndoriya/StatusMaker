@@ -4,19 +4,19 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white">
+        android:layout_height="match_parent">
 
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             style="@style/tool_bar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -38,45 +38,63 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/_15sdp"
                     android:layout_toEndOf="@+id/back_iv"
-                    android:text="@string/create_status"
-                    tools:ignore="RelativeOverlap" />
+                    android:gravity="center_vertical"
+                    android:text="@string/create_status" />
 
-                <TextView
+              <!--  <TextView
                     android:id="@+id/save_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/_11sdp"
+                    android:layout_toStartOf="@id/change_bg_iv"
                     android:background="@drawable/rect_unselected_bg"
                     android:paddingHorizontal="@dimen/_10sdp"
                     android:paddingVertical="@dimen/_3sdp"
                     android:text="@string/finish"
                     android:textAllCaps="false"
                     android:textAppearance="@style/laila_medium_16"
-                    android:visibility="gone" />
+                    android:visibility="gone" />-->
 
                 <TextView
                     android:id="@+id/next_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/_11sdp"
+                    android:layout_toStartOf="@id/change_bg_iv"
                     android:background="@drawable/rect_unselected_bg"
                     android:paddingHorizontal="@dimen/_10sdp"
                     android:paddingVertical="@dimen/_3sdp"
                     android:text="@string/next"
                     android:textAllCaps="false"
-                    android:textAppearance="@style/laila_medium_16" />
+                    android:textAppearance="@style/laila_medium_16"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/share_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@id/change_bg_iv"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/_11sdp"
+                    android:background="@drawable/rect_unselected_bg"
+                    android:paddingHorizontal="@dimen/_10sdp"
+                    android:paddingVertical="@dimen/_3sdp"
+                    android:text="@string/share"
+                    android:textAllCaps="false"
+                    android:textAppearance="@style/laila_medium_16"
+                    android:visibility="gone" />
 
                 <ImageView
+                    android:id="@+id/change_bg_iv"
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
+                    android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/_6sdp"
-                    android:layout_toStartOf="@id/next_tv"
-                    android:src="@drawable/ic_background_change" />
+                    android:src="@drawable/ic_background_change"
+                    android:visibility="gone" />
 
             </RelativeLayout>
 

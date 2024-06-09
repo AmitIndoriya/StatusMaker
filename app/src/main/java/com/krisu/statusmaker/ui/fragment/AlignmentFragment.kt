@@ -36,18 +36,16 @@ class AlignmentFragment : Fragment(), OnClickListener {
     override fun onClick(v: View) {
         when (v.id) {
             R.id.left_align -> {
-                //activity.changeAlignment(2)
+                (parentFragment as ShareStatusFragment).changeAlignment(2)
             }
 
             R.id.center_align -> {
-                //activity.changeAlignment(1)
+                (parentFragment as ShareStatusFragment).changeAlignment(1)
             }
 
             R.id.right_align -> {
-                //activity.changeAlignment(3)
+                (parentFragment as ShareStatusFragment).changeAlignment(3)
             }
         }
     }
-
-
 }

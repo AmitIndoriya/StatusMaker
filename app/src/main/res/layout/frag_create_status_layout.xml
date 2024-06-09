@@ -6,43 +6,19 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
+
             android:id="@+id/image_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/layout">
+            android:layout_height="@dimen/_240sdp">
 
             <ImageView
-                android:id="@+id/image"
+                android:id="@+id/image_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:adjustViewBounds="true"
+                android:background="@color/purple_200"
+                android:scaleType="fitXY"
                 android:src="@drawable/default_suvichar_bg" />
-
-            <FrameLayout
-                android:id="@+id/framelayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:padding="@dimen/_4sdp">
-
-                <TextView
-                    android:id="@+id/textview"
-                    style="@style/laila_medium_18"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/_6sdp"
-                    android:textColor="@color/black"
-                    android:visibility="gone" />
-
-                <TextView
-                    android:id="@+id/textview1"
-                    style="@style/laila_medium_18"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/_6sdp"
-                    android:textColor="@color/white"
-                    android:visibility="gone" />
-            </FrameLayout>
 
             <EditText
                 android:id="@+id/edit_text"
@@ -62,11 +38,5 @@
             </EditText>
         </RelativeLayout>
 
-        <include
-            android:id="@+id/layout"
-            layout="@layout/persistent_bottom_sheet"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" />
     </RelativeLayout>
 </layout>

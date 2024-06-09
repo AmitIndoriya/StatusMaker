@@ -45,28 +45,22 @@ class ShadowFragment : Fragment() {
         binding.recyclerView.overScrollMode = View.OVER_SCROLL_NEVER
         binding.recyclerView.layoutManager =
             GridLayoutManager(activity, 2, GridLayoutManager.HORIZONTAL, false)
-        binding.recyclerView.adapter = ColorAdapter(activity)
+        binding.recyclerView.adapter = ColorAdapter(activity, parentFragment)
     }
-    // Here "layout_login" is a name of layout file
-    // created for LoginFragment
-
 
     private fun setSeekbar() {
         binding.seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(
                 seek: SeekBar, progress: Int, fromUser: Boolean
             ) {
-                //(requireActivity() as CreateStatusActivity).changeStrokeWidht(progress.toFloat() / 10.toFloat())
-
+                (parentFragment as ShareStatusFragment).changeStrokeWidht(progress.toFloat() / 10.toFloat())
             }
 
             override fun onStartTrackingTouch(seek: SeekBar) {
-                // write custom code for progress is started
             }
 
 
             override fun onStopTrackingTouch(seek: SeekBar) {
-                // write custom code for progress is stopped
 
             }
         })

@@ -31,7 +31,9 @@ class FontFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     fun setSeekbarLimit() {/* seekBar.min = (activity).textSize.toInt()
          seekBar.max = (activity).textSize.toInt() + 20*/
-        //binding.seekbar.progress = (activity).textSize.toInt()
+        if(this::binding.isInitialized){
+            binding.seekbar.progress = (activity as CreateStatusActivity).textSize.toInt()
+        }
     }
 
     override fun onCreateView(
@@ -48,7 +50,7 @@ class FontFragment : Fragment() {
         binding.recyclerView.overScrollMode = View.OVER_SCROLL_NEVER
         binding.recyclerView.layoutManager =
             GridLayoutManager(activity, 1, GridLayoutManager.HORIZONTAL, false)
-        binding.recyclerView.adapter = ColorAdapter(activity)
+        binding.recyclerView.adapter = ColorAdapter(activity, parentFragment)
     }
     // Here "layout_login" is a name of layout file
     // created for LoginFragment
@@ -60,10 +62,7 @@ class FontFragment : Fragment() {
             override fun onProgressChanged(
                 seek: SeekBar, progress: Int, fromUser: Boolean
             ) {
-                //(requireActivity() as CreateStatusActivity).changeFontSize(progress.toFloat())
-                //(requireActivity() as CreateSuvicharActivity).changeStrokeWidht(progress.toFloat())
-
-                // write custom code for progress is changed
+                (parentFragment as ShareStatusFragment).changeFontSize(progress.toFloat())
             }
 
             override fun onStartTrackingTouch(seek: SeekBar) {

@@ -67,7 +67,25 @@ open class BaseActivity : AppCompatActivity() {
         return returnedBitmap
     }
 
-    private fun shareImage(isShowCaption: Boolean, shareText: String) {
+    private fun viewToImage(view: View): Bitmap? {
+        val returnedBitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(returnedBitmap)
+        val bgDrawable = view.background
+        if (bgDrawable != null) bgDrawable.draw(canvas) else canvas.drawColor(Color.WHITE)
+        view.draw(canvas)
+        try {
+            val cachePath = File(cacheDir, "images")
+            cachePath.mkdirs()
+            val stream = FileOutputStream("$cachePath/image.png")
+            returnedBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            stream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return returnedBitmap
+    }
+
+     fun shareImage(isShowCaption: Boolean, shareText: String) {
         val imagePath = File(cacheDir, "images")
         val newFile = File(imagePath, "image.png")
         val contentUri =
@@ -97,7 +115,7 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     fun saveImageInCache(view: View) {
-        val bitmap = viewToImage(view, "")
+        val bitmap = viewToImage(view)
         CacheStore.getInstance().saveCacheFile("bitmap", bitmap)
     }
 
