@@ -60,7 +60,6 @@ class CreateStatusFragment : BaseFragment() {
         binding = FragCreateStatusLayoutBinding.inflate(inflater, container, false)
         addObservers()
         setupEdittext()
-        Toast.makeText(activity, "oncreateview", Toast.LENGTH_SHORT).show()
         activity.changeToolbar(resources.getString(R.string.create_status), 1)
         return binding.root
     }
@@ -90,20 +89,8 @@ class CreateStatusFragment : BaseFragment() {
     }
 
     private fun changeBackground(url: String) {
-        val target = object : com.squareup.picasso.Target {
-            override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                binding.imageView.setImageBitmap(bitmap)
-            }
-
-            override fun onBitmapFailed(errorDrawable: Drawable?) {
-            }
-
-            override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-                binding.imageView.setImageResource(R.drawable.default_suvichar_bg)
-            }
-        }
         Picasso.with(context)
             .load(url)
-            .into(target)
+            .into(binding.imageView)
     }
 }

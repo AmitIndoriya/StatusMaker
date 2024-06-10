@@ -43,7 +43,7 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
 
     lateinit var adapter: ViewPagerAdapter
-    lateinit var currentFragment: Fragment
+    private lateinit var currentFragment: Fragment
 
     companion object {
         fun getInstance() = ShareStatusFragment()
@@ -69,18 +69,21 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
         bottomSheetBehavior.isHideable = false
         bottomSheetBehavior.maxHeight = 710
         setupViewPager(binding.layout.tabViewpager)
-        setListeners()
         setTouchListener()
         setData()
         addObservers()
         activity.changeToolbar(resources.getString(R.string.create_status), 2)
+        Handler().postDelayed({
+            (adapter.getItem(0) as FontFragment).setSeekbarLimit()
+        }, 10)
+
         return binding.root
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setupViewPager(viewpager: ViewPager) {
         adapter = ViewPagerAdapter(childFragmentManager)
-        adapter.addFragment(FontFragment(), "font")
+        adapter.addFragment(FontFragment(), "fonts")
         adapter.addFragment(ColorFragment(), "color")
         adapter.addFragment(AlignmentFragment(), "Alignment")
         adapter.addFragment(ShadowFragment(), "Shadow")
@@ -111,11 +114,6 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
 
             }
         })
-        Handler().postDelayed({
-            activity.textSize = binding.textview.textSize
-            setTextSize()
-            (adapter.getItem(0) as FontFragment).setSeekbarLimit()
-        }, 10)
 
     }
 
@@ -140,21 +138,14 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
     }
 
 
-
     fun changeFontSize(scaleFact: Float) {
-        if (activity.textSize < scaleFact) {
-            binding.textview.setTextSize(TypedValue.COMPLEX_UNIT_PX, scaleFact)
-            binding.textview1.setTextSize(TypedValue.COMPLEX_UNIT_PX, scaleFact)
-            activity.scaleFact = scaleFact
+        if (scaleFact > 60f) {
+            binding.shadowTextview.setTextSize(TypedValue.COMPLEX_UNIT_PX, scaleFact)
+            binding.textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, scaleFact)
+            activity.textSize = scaleFact
         }
     }
 
-    private fun setTextSize() {
-        if (activity.scaleFact != 0f) {
-            binding.textview.setTextSize(TypedValue.COMPLEX_UNIT_PX, activity.scaleFact)
-            binding.textview1.setTextSize(TypedValue.COMPLEX_UNIT_PX, activity.scaleFact)
-        }
-    }
 
     @SuppressLint("ClickableViewAccessibility")
     fun setTouchListener() {
@@ -182,59 +173,86 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
     }
 
     override fun changeTextColor(color: Int) {
-        binding.textview1.setTextColor(resources.getColor(color))
+        activity.textColor = color
+        binding.textView.setTextColor(resources.getColor(color))
     }
 
-    fun changeColor(color: Int) {
+    fun changeColor(color: Int, pos: Int) {
         currentFragment = adapter.getItem(binding.layout.tabViewpager.currentItem)
         if (currentFragment is ShadowFragment) {
+            activity.selectedStrokeColorNum = pos
             changeStrokeColor(color)
         } else if (currentFragment is ColorFragment) {
+            activity.selectedTextColorNum = pos
             changeTextColor(color)
         }
     }
 
     override fun changeStrokeColor(color: Int) {
-        binding.textview.setTextColor(resources.getColor(color))
+        activity.strokeColor = color
+        binding.shadowTextview.setTextColor(resources.getColor(color))
     }
 
     override fun changeStrokeWidht(width: Float) {
-        binding.textview.text = activity.suvicharStr
-        binding.textview.paint.strokeWidth = activity.textStrokeWidth + width
-        binding.textview.paint.style = Paint.Style.STROKE;
+        binding.shadowTextview.text = activity.suvicharStr
+        binding.shadowTextview.paint.strokeWidth = activity.textStrokeWidth + width
+        binding.shadowTextview.paint.style = Paint.Style.STROKE
+    }
+
+    fun changeFont(fontName: String) {
+        binding.shadowTextview.typeface = Utils.getCustomFont(activity, fontName)
+        binding.textView.typeface = Utils.getCustomFont(activity, fontName)
     }
 
     override fun changeAlignment(type: Int) {
+        activity.textAlignMent = type
         when (type) {
             1 -> {
-                binding.textview.gravity = Gravity.CENTER_HORIZONTAL
-                binding.textview1.gravity = Gravity.CENTER_HORIZONTAL
+                binding.shadowTextview.gravity = Gravity.CENTER_HORIZONTAL
+                binding.textView.gravity = Gravity.CENTER_HORIZONTAL
             }
 
             2 -> {
-                binding.textview.gravity = Gravity.START
-                binding.textview1.gravity = Gravity.START
+                binding.shadowTextview.gravity = Gravity.START
+                binding.textView.gravity = Gravity.START
             }
 
             3 -> {
-                binding.textview.gravity = Gravity.END
-                binding.textview1.gravity = Gravity.END
+                binding.shadowTextview.gravity = Gravity.END
+                binding.textView.gravity = Gravity.END
             }
         }
 
     }
 
-    fun changeBackground(url: String) {
+    private fun changeBackground(url: String) {
         val target = object : com.squareup.picasso.Target {
             override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
                 binding.imageView.setImageBitmap(bitmap)
+                val palette = bitmap?.let { Palette.from(it).generate() }
+                setupColorProfileBg(
+                    palette?.vibrantSwatch,
+                    binding.profileBg1,
+                    R.drawable.rect_rounded_bg2
+                )
+                setupColorProfileBg(
+                    palette?.darkVibrantSwatch,
+                    binding.profileBg2,
+                    R.drawable.rect_rounded_bg2
+                )
+                setupTransparentColor(
+                    palette?.vibrantSwatch,
+                    binding.linearLayout,
+                    R.drawable.rect_rounded_bg1
+                )
             }
 
             override fun onBitmapFailed(errorDrawable: Drawable?) {
+                binding.imageView.setImageResource(R.drawable.default_suvichar_bg)
             }
 
             override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-                binding.imageView.setImageResource(R.drawable.default_suvichar_bg)
+                //binding.imageView.setImageResource(R.drawable.default_suvichar_bg)
             }
         }
         Picasso.with(context)
@@ -243,38 +261,23 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
     }
 
     private fun setData() {
-        binding.textview.text = activity.suvicharStr
-        binding.textview1.text = activity.suvicharStr
+        binding.textView.text = activity.suvicharStr
+        binding.textView.setTextColor(resources.getColor(activity.textColor))
+        binding.textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, activity.textSize)
+        binding.textView.typeface = Utils.getCustomFont(activity, activity.selectedFont)
+
+        binding.shadowTextview.text = activity.suvicharStr
+        binding.shadowTextview.setTextSize(TypedValue.COMPLEX_UNIT_PX, activity.textSize)
+        binding.shadowTextview.text = activity.suvicharStr
+        binding.shadowTextview.paint.strokeWidth = activity.textStrokeWidth
+        binding.shadowTextview.paint.style = Paint.Style.STROKE
+        binding.shadowTextview.setTextColor(resources.getColor(activity.strokeColor))
+        binding.shadowTextview.typeface = Utils.getCustomFont(activity, activity.selectedFont)
+        changeAlignment(activity.textAlignMent)
         setProfileData()
     }
 
     private fun setProfileData() {
-        val bitmap = activity.getImageFromCache()
-        binding.imageView.setImageBitmap(bitmap)
-        val palette = Palette.from(bitmap).generate()
-        val paletteArrList = ArrayList<Palette.Swatch?>()
-        paletteArrList.add(palette.vibrantSwatch)
-        paletteArrList.add(palette.lightVibrantSwatch)
-        paletteArrList.add(palette.darkVibrantSwatch)
-        paletteArrList.add(palette.mutedSwatch)
-        paletteArrList.add(palette.lightMutedSwatch)
-        paletteArrList.add(palette.darkMutedSwatch)
-        paletteArrList.add(palette.dominantSwatch)
-        setupColorProfileBg(
-            palette.vibrantSwatch,
-            binding.profileBg1,
-            R.drawable.rect_rounded_bg2
-        )
-        setupColorProfileBg(
-            palette.darkVibrantSwatch,
-            binding.profileBg2,
-            R.drawable.rect_rounded_bg2
-        )
-        setupTransparentColor(
-            palette.vibrantSwatch,
-            binding.linearLayout,
-            R.drawable.rect_rounded_bg1
-        )
         Picasso.with(activity).load(Utils.getStringInSP(activity, "img_url"))
             .into(binding.profileImg)
     }
@@ -308,6 +311,6 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
     }
 
     fun shareStatus() {
-        activity.shareImage(true, "")
+        activity.viewToImage(binding.container, "")
     }
 }

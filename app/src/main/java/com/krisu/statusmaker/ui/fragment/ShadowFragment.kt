@@ -45,7 +45,7 @@ class ShadowFragment : Fragment() {
         binding.recyclerView.overScrollMode = View.OVER_SCROLL_NEVER
         binding.recyclerView.layoutManager =
             GridLayoutManager(activity, 2, GridLayoutManager.HORIZONTAL, false)
-        binding.recyclerView.adapter = ColorAdapter(activity, parentFragment)
+        binding.recyclerView.adapter = ColorAdapter(activity, parentFragment, this@ShadowFragment)
     }
 
     private fun setSeekbar() {

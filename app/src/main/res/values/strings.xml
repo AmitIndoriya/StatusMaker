@@ -21,4 +21,5 @@
     <string name="type_your_text_here">Type your text here</string>
     <string name="select_background">Select Background</string>
     <string name="share_status">Share Status</string>
+    <string name="font">Font</string>
 </resources>

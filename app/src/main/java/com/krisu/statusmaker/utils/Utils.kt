@@ -2,6 +2,7 @@ package com.krisu.statusmaker.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Typeface
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 
@@ -62,5 +63,9 @@ object Utils {
     fun getIntInSP(context: Context, key: String): Int {
         val sh = context.getSharedPreferences("MySharedPref", Context.MODE_PRIVATE);
         return sh.getInt(key, -1)
+    }
+
+    fun getCustomFont(context: Context, fontName: String): Typeface {
+        return Typeface.createFromAsset(context.assets, "fonts/$fontName")
     }
 }

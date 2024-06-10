@@ -18,6 +18,7 @@ import com.krisu.statusmaker.databinding.FragAlignmentLayoutBinding
 import com.krisu.statusmaker.databinding.FragFontLayoutBinding
 import com.krisu.statusmaker.ui.activity.CreateStatusActivity
 import com.krisu.statusmaker.ui.adapter.ColorAdapter
+import com.krisu.statusmaker.ui.adapter.FontAdapter
 
 class FontFragment : Fragment() {
     lateinit var binding: FragFontLayoutBinding
@@ -29,10 +30,9 @@ class FontFragment : Fragment() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun setSeekbarLimit() {/* seekBar.min = (activity).textSize.toInt()
-         seekBar.max = (activity).textSize.toInt() + 20*/
-        if(this::binding.isInitialized){
-            binding.seekbar.progress = (activity as CreateStatusActivity).textSize.toInt()
+    fun setSeekbarLimit() {
+        if (this::binding.isInitialized) {
+            binding.seekbar.progress = activity.textSize.toInt()
         }
     }
 
@@ -50,7 +50,7 @@ class FontFragment : Fragment() {
         binding.recyclerView.overScrollMode = View.OVER_SCROLL_NEVER
         binding.recyclerView.layoutManager =
             GridLayoutManager(activity, 1, GridLayoutManager.HORIZONTAL, false)
-        binding.recyclerView.adapter = ColorAdapter(activity, parentFragment)
+        binding.recyclerView.adapter = FontAdapter(activity, parentFragment)
     }
     // Here "layout_login" is a name of layout file
     // created for LoginFragment

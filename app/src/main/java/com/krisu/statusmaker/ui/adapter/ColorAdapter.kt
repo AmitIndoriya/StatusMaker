@@ -1,5 +1,6 @@
 package com.krisu.statusmaker.ui.adapter
 
+import android.annotation.SuppressLint
 import android.content.res.Resources
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -14,17 +15,16 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.krisu.statusmaker.R
 import com.krisu.statusmaker.ui.activity.CreateStatusActivity
-import com.krisu.statusmaker.ui.fragment.CreateStatusFragment
-import com.krisu.statusmaker.ui.fragment.FontFragment
+import com.krisu.statusmaker.ui.fragment.ColorFragment
 import com.krisu.statusmaker.ui.fragment.ShadowFragment
 import com.krisu.statusmaker.ui.fragment.ShareStatusFragment
 
 
 class ColorAdapter(
     private val context: CreateStatusActivity,
-    val fragment: Fragment?
+    private val parent: Fragment?,
+    private val childFrag: Fragment?
 ) : RecyclerView.Adapter<ColorAdapter.CourseViewHolder>() {
-    private var selectedPos: Int = 0
     private val colorList: IntArray = intArrayOf(
         R.color.color1,
         R.color.color2,
@@ -84,19 +84,30 @@ class ColorAdapter(
         return CourseViewHolder(itemView)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(holder: CourseViewHolder, position: Int) {
         DrawableCompat.setTint(
             holder.imageView.drawable,
             ContextCompat.getColor(context as AppCompatActivity, colorList[position])
         )
-        if (position == selectedPos) {
-            holder.linearLayout.setBackgroundResource(R.drawable.circle_light_gray_red_border)
-        } else {
-            holder.linearLayout.setBackgroundResource(R.drawable.circle_light_gray)
+        if (childFrag is ColorFragment) {
+            if (position == context.selectedTextColorNum) {
+                holder.linearLayout.setBackgroundResource(R.drawable.circle_light_gray_red_border)
+            } else {
+                holder.linearLayout.setBackgroundResource(R.drawable.circle_light_gray)
+            }
+        } else if (childFrag is ShadowFragment) {
+            if (position == context.selectedStrokeColorNum) {
+                holder.linearLayout.setBackgroundResource(R.drawable.circle_light_gray_red_border)
+            } else {
+                holder.linearLayout.setBackgroundResource(R.drawable.circle_light_gray)
+            }
         }
+
         holder.imageView.setOnClickListener {
-            if (fragment is ShareStatusFragment) {
-                fragment.changeColor(colorList[position])
+            if (parent is ShareStatusFragment) {
+                parent.changeColor(colorList[position], position)
+                notifyDataSetChanged()
             }
         }
         val params: LinearLayout.LayoutParams =

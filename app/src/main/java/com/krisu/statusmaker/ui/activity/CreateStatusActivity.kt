@@ -10,6 +10,7 @@ import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
 import com.krisu.statusmaker.R
 import com.krisu.statusmaker.databinding.ActCreateStatusLayoutBinding
@@ -29,9 +30,17 @@ class CreateStatusActivity : BaseActivity(), OnClickListener, ChangeBackgroundFr
     var bgUrlLD = MutableLiveData<String>()
     private var fragTag = ""
     var suvicharStr = ""
-    var textSize = 0f
-    var scaleFact = 0f
+    var textSize = 60f
+    var textColor = R.color.white
+
     var textStrokeWidth = 5f
+    var strokeColor = R.color.black
+    var textAlignMent = 1
+    var selectedFont = "Laila-SemiBold.ttf"
+    var selectedFontNum = 0
+    var selectedTextColorNum = 0
+    var selectedStrokeColorNum = 0
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,18 +77,30 @@ class CreateStatusActivity : BaseActivity(), OnClickListener, ChangeBackgroundFr
         backStackStateName: String,
         isAddToBackStack: Boolean = true
     ) {
-        fragTag = "fragmentTag"
+        fragTag = fragmentTag
         if (isAddToBackStack) {
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragment_container_view, fragment, fragmentTag)
-                .addToBackStack(backStackStateName)
-                .commit()
+            val fm = supportFragmentManager
+            val fragmentTransaction: FragmentTransaction = fm.beginTransaction()
+            fragmentTransaction.setCustomAnimations(
+                R.anim.slide_in_right,
+                R.anim.stay_with_1000,
+                R.anim.stay_with_1000,
+                R.anim.slide_out_right
+            )
+            fragmentTransaction.replace(R.id.fragment_container_view, fragment, fragmentTag)
+            fragmentTransaction.addToBackStack(backStackStateName)
+            fragmentTransaction.commit()
         } else {
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragment_container_view, fragment, fragmentTag)
-                .commit()
+            val fm = supportFragmentManager
+            val fragmentTransaction: FragmentTransaction = fm.beginTransaction()
+            fragmentTransaction.setCustomAnimations(
+                R.anim.slide_in_right,
+                R.anim.stay_with_1000,
+                R.anim.stay_with_1000,
+                R.anim.slide_out_right
+            )
+            fragmentTransaction.replace(R.id.fragment_container_view, fragment, fragmentTag)
+            fragmentTransaction.commit()
         }
 
     }
@@ -128,9 +149,6 @@ class CreateStatusActivity : BaseActivity(), OnClickListener, ChangeBackgroundFr
 
             R.id.next_tv -> {
                 if (!TextUtils.isEmpty(suvicharStr)) {
-                    val fragment =
-                        supportFragmentManager.findFragmentByTag("CreateStatusFragment") as CreateStatusFragment
-                    //fragment.saveImageInCache()
                     replaceFragment(
                         ShareStatusFragment.getInstance(),
                         "ShareStatusFragment",
