@@ -110,6 +110,7 @@ class CreateStatusActivity : BaseActivity(), OnClickListener, ChangeBackgroundFr
         binding.changeBgIv.setOnClickListener(this)
         binding.nextTv.setOnClickListener(this)
         binding.shareTv.setOnClickListener(this)
+        binding.backIv.setOnClickListener(this)
     }
 
     fun changeToolbar(title: String, fragNo: Int) {
@@ -169,6 +170,10 @@ class CreateStatusActivity : BaseActivity(), OnClickListener, ChangeBackgroundFr
                     supportFragmentManager.findFragmentByTag("ShareStatusFragment") as ShareStatusFragment
                 fragment.shareStatus()
 
+            }
+
+            R.id.back_iv -> {
+                finish()
             }
         }
     }

@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.text.TextUtils
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -30,8 +31,10 @@ import com.google.android.material.tabs.TabLayout
 import com.krisu.statusmaker.R
 import com.krisu.statusmaker.databinding.FragShareStatusLayoutBinding
 import com.krisu.statusmaker.ui.activity.CreateStatusActivity
+import com.krisu.statusmaker.ui.activity.HomeActivity
 import com.krisu.statusmaker.ui.adapter.ViewPagerAdapter
 import com.krisu.statusmaker.ui.callback.TextEditListener
+import com.krisu.statusmaker.utils.PreferenceConstant
 import com.krisu.statusmaker.utils.Utils
 import com.squareup.picasso.Picasso
 import kotlin.math.roundToInt
@@ -57,6 +60,12 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
     private fun addObservers() {
         activity.bgUrlLD.observe(activity) {
             changeBackground(it)
+        }
+        activity.viewModel.avatarListLD.observe(activity) {
+            val avatarId = Utils.getIntInSP(activity, PreferenceConstant.AVATAR_ID)
+            if (avatarId != -1) {
+                binding.profileImg.setImageDrawable(it[avatarId]?.drawable)
+            }
         }
     }
 
@@ -278,8 +287,16 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
     }
 
     private fun setProfileData() {
-        Picasso.with(activity).load(Utils.getStringInSP(activity, "img_url"))
-            .into(binding.profileImg)
+
+        if (Utils.getBooleanInSP(activity, PreferenceConstant.IS_AVATAR_SELECTED)) {
+            (context as CreateStatusActivity).viewModel.getAvatarList()
+        } else {
+            if (!TextUtils.isEmpty(Utils.getStringInSP(activity, PreferenceConstant.PROFILE_IMG))) {
+                Picasso.with(activity)
+                    .load(Utils.getStringInSP(activity, PreferenceConstant.PROFILE_IMG))
+                    .into(binding.profileImg)
+            }
+        }
     }
 
     private fun setupColorProfileBg(
@@ -301,7 +318,6 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
         val wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable!!)
         DrawableCompat.setTint(wrappedDrawable, /*color*/generatedColor)
         linearLayout.setBackgroundDrawable(wrappedDrawable)
-        //textView.setTextColor(swatch?.titleTextColor ?: ContextCompat.getColor(this, R.color.black))
     }
 
     private fun generateTransparentColor(color: Int, alpha: Double?): Int {
