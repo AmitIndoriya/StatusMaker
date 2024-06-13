@@ -42,8 +42,17 @@
                         android:layout_height="@dimen/_20sdp"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="@dimen/_8sdp"
-                        android:layout_toStartOf="@+id/profile_iv"
+                        android:layout_toStartOf="@+id/share_app_iv"
                         android:src="@drawable/ic_category" />
+
+                    <ImageView
+                        android:id="@+id/share_app_iv"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/_8sdp"
+                        android:layout_toStartOf="@+id/profile_iv"
+                        android:src="@drawable/ic_share_app" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/profile_iv"

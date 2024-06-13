@@ -31,6 +31,7 @@ import com.krisu.statusmaker.utils.PreferenceConstant
 import com.krisu.statusmaker.utils.Utils
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
+import java.util.Random
 import kotlin.math.roundToInt
 
 class HomeRVAdapterNew(
@@ -39,6 +40,36 @@ class HomeRVAdapterNew(
     private val bitmapList: ArrayList<Bitmap>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var target: com.squareup.picasso.Target
+    private var distinctNumbers: IntArray
+
+    init {
+        distinctNumbers = generateDistinctNumbers()
+    }
+
+    val imgs = arrayOf(
+        "https://www.astroganit.com/status/special_day/special_day1.jpg",
+        "https://www.astroganit.com/status/special_day/special_day2.jpg",
+        "https://www.astroganit.com/status/special_day/special_day3.jpg",
+        "https://www.astroganit.com/status/special_day/special_day4.jpg",
+        "https://www.astroganit.com/status/special_day/special_day5.jpg",
+        "https://www.astroganit.com/status/special_day/special_day6.jpg",
+        "https://www.astroganit.com/status/special_day/special_day7.jpg",
+        "https://www.astroganit.com/status/special_day/special_day8.jpg",
+        "https://www.astroganit.com/status/special_day/special_day9.jpg",
+        "https://www.astroganit.com/status/special_day/special_day10.jpg",
+        "https://www.astroganit.com/status/special_day/special_day11.jpg",
+        "https://www.astroganit.com/status/special_day/special_day12.jpg",
+        "https://www.astroganit.com/status/special_day/special_day13.jpg",
+        "https://www.astroganit.com/status/special_day/special_day14.jpg",
+        "https://www.astroganit.com/status/special_day/special_day15.jpg",
+        "https://www.astroganit.com/status/special_day/special_day16.jpg",
+    )
+
+    private fun generateDistinctNumbers(): IntArray {
+        val numbers = (0 until arrayList.size).toMutableList()
+        numbers.shuffle(Random(System.currentTimeMillis()))
+        return numbers.take(arrayList.size).toIntArray()
+    }
 
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
@@ -72,10 +103,10 @@ class HomeRVAdapterNew(
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (position % 4) {
-            0 -> (holder as HomeViewHolder1).bind(arrayList[position].url)
-            1 -> (holder as HomeViewHolder2).bind(arrayList[position].url)
-            2 -> (holder as HomeViewHolder3).bind(arrayList[position].url)
-            3 -> (holder as HomeViewHolder4).bind(arrayList[position].url)
+            0 -> (holder as HomeViewHolder1).bind(arrayList[distinctNumbers[position]].url)
+            1 -> (holder as HomeViewHolder2).bind(arrayList[distinctNumbers[position]].url)
+            2 -> (holder as HomeViewHolder3).bind(arrayList[distinctNumbers[position]].url)
+            3 -> (holder as HomeViewHolder4).bind(arrayList[distinctNumbers[position]].url)
         }
     }
 
@@ -221,6 +252,7 @@ class HomeRVAdapterNew(
         }
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     fun setProfileData(imageView: ImageView, nameTv: TextView, mobNumberTv: TextView) {
         if (Utils.getBooleanInSP(context, PreferenceConstant.IS_AVATAR_SELECTED)) {
             val avatarId = Utils.getIntInSP(context, PreferenceConstant.AVATAR_ID)
@@ -332,6 +364,7 @@ class HomeRVAdapterNew(
         if (arrayList != null) {
             this.arrayList.addAll(arrayList)
         }
+        distinctNumbers = generateDistinctNumbers()
         notifyDataSetChanged()
     }
 
@@ -341,6 +374,7 @@ class HomeRVAdapterNew(
         if (arrayList != null) {
             this.arrayList.addAll(arrayList)
         }
+        distinctNumbers = generateDistinctNumbers()
         notifyDataSetChanged()
     }
 
@@ -353,10 +387,8 @@ class HomeRVAdapterNew(
         isBorderSet: Boolean = false,
         pos: Int
     ) {
-        Log.i("Pos", "==" + pos)
         target = object : com.squareup.picasso.Target {
             override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
-                Log.i("Pos1", "==" + pos)
                 imageView.setImageBitmap(bitmap)
                 bitmap?.let {
                     if (isBorderSet) {
@@ -374,7 +406,7 @@ class HomeRVAdapterNew(
             }
 
             override fun onBitmapFailed(errorDrawable: Drawable?) {
-                TODO("Not yet implemented")
+                imageView.setImageResource(R.color.purple_200)
             }
 
             override fun onPrepareLoad(placeHolderDrawable: Drawable?) {

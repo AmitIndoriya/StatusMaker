@@ -80,7 +80,6 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:paddingStart="140dp"
-                            android:text="Amit Sharma"
                             android:textColor="@color/white" />
 
                         <TextView
@@ -90,7 +89,6 @@
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
                             android:paddingStart="140dp"
-                            android:text="9015469060"
                             android:textColor="@color/white" />
                     </LinearLayout>
 

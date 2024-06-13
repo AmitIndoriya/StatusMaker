@@ -287,7 +287,14 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
     }
 
     private fun setProfileData() {
-
+        if (!TextUtils.isEmpty(Utils.getStringInSP(activity, PreferenceConstant.PROFILE_NAME))) {
+            binding.profileName.text =
+                Utils.getStringInSP(activity, PreferenceConstant.PROFILE_NAME)
+        }
+        if (!TextUtils.isEmpty(Utils.getStringInSP(activity, PreferenceConstant.MOBILE_NUMBER))) {
+            binding.numberTv.text =
+                Utils.getStringInSP(activity, PreferenceConstant.MOBILE_NUMBER)
+        }
         if (Utils.getBooleanInSP(activity, PreferenceConstant.IS_AVATAR_SELECTED)) {
             (context as CreateStatusActivity).viewModel.getAvatarList()
         } else {

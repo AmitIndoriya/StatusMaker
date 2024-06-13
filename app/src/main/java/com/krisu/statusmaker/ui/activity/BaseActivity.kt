@@ -1,6 +1,7 @@
 package com.krisu.statusmaker.ui.activity
 
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.krisu.statusmaker.R
 import com.krisu.statusmaker.utils.CacheStore
+import com.krisu.statusmaker.utils.Constants
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -85,7 +87,7 @@ open class BaseActivity : AppCompatActivity() {
         return returnedBitmap
     }
 
-     fun shareImage(isShowCaption: Boolean, shareText: String) {
+    fun shareImage(isShowCaption: Boolean, shareText: String) {
         val imagePath = File(cacheDir, "images")
         val newFile = File(imagePath, "image.png")
         val contentUri =
@@ -137,5 +139,18 @@ open class BaseActivity : AppCompatActivity() {
         window.navigationBarColor = this.resources.getColor(R.color.white)
         window.decorView.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+    }
+
+    fun shareApp() {
+        val whatsappIntent = Intent(Intent.ACTION_SEND)
+        whatsappIntent.type = "text/plain"
+        whatsappIntent.setPackage("com.whatsapp")
+        val shareText =
+            "अपने दोस्त और परिवार संग शेयर करे मोटिवेशनल, बधाई और सुविचार संदेश " + Constants.APP_URL
+        whatsappIntent.putExtra(Intent.EXTRA_TEXT, shareText)
+        try {
+            startActivity(whatsappIntent)
+        } catch (_: ActivityNotFoundException) {
+        }
     }
 }

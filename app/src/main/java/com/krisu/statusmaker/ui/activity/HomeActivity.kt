@@ -49,6 +49,7 @@ class HomeActivity : BaseActivity(), OnClickListener {
         binding.catIv.setOnClickListener(this)
         binding.profileIv.setOnClickListener(this)
         binding.createTv.setOnClickListener(this)
+        binding.shareAppIv.setOnClickListener(this)
     }
 
     private fun addObservers() {
@@ -183,6 +184,10 @@ class HomeActivity : BaseActivity(), OnClickListener {
 
             R.id.create_tv -> {
                 startActivity(Intent(this@HomeActivity, CreateStatusActivity::class.java))
+            }
+
+            R.id.share_app_iv -> {
+                shareApp()
             }
 
         }
