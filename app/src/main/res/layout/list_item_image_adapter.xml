@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:id="@+id/root"
@@ -15,5 +16,19 @@
             android:adjustViewBounds="true"
             android:scaleType="centerCrop" />
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/progressbar"
+            android:layout_width="@dimen/_35sdp"
+            android:layout_height="@dimen/_35sdp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            app:cardCornerRadius="@dimen/_30sdp">
+
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/_6sdp" />
+
+        </androidx.cardview.widget.CardView>
     </RelativeLayout>
 </layout>

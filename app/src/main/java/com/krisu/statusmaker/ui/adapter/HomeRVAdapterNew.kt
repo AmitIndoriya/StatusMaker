@@ -142,7 +142,7 @@ class HomeRVAdapterNew(
             )
             editTv.setOnClickListener {
                 val intent = Intent(context, EditDesignActivity::class.java)
-                intent.putExtra(IntentConstants.IMG_URL, arrayList[layoutPosition].url)
+                intent.putExtra(IntentConstants.IMG_URL, arrayList[distinctNumbers[layoutPosition]].url)
                 intent.putExtra(IntentConstants.SELECTED_PAGE, 0)
                 context.startActivity(intent)
             }
@@ -174,7 +174,7 @@ class HomeRVAdapterNew(
             )
             editTv.setOnClickListener {
                 val intent = Intent(context, EditDesignActivity::class.java)
-                intent.putExtra(IntentConstants.IMG_URL, arrayList[layoutPosition].url)
+                intent.putExtra(IntentConstants.IMG_URL, arrayList[distinctNumbers[layoutPosition]].url)
                 intent.putExtra(IntentConstants.SELECTED_PAGE, 1)
                 context.startActivity(intent)
             }
@@ -208,7 +208,7 @@ class HomeRVAdapterNew(
             )
             editTv.setOnClickListener {
                 val intent = Intent(context, EditDesignActivity::class.java)
-                intent.putExtra(IntentConstants.IMG_URL, arrayList[layoutPosition].url)
+                intent.putExtra(IntentConstants.IMG_URL, arrayList[distinctNumbers[layoutPosition]].url)
                 intent.putExtra(IntentConstants.SELECTED_PAGE, 2)
                 context.startActivity(intent)
             }
@@ -242,7 +242,7 @@ class HomeRVAdapterNew(
             )
             editTv.setOnClickListener {
                 val intent = Intent(context, EditDesignActivity::class.java)
-                intent.putExtra(IntentConstants.IMG_URL, arrayList[layoutPosition].url)
+                intent.putExtra(IntentConstants.IMG_URL, arrayList[distinctNumbers[layoutPosition]].url)
                 intent.putExtra(IntentConstants.SELECTED_PAGE, 3)
                 context.startActivity(intent)
             }

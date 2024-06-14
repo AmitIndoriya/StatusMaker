@@ -107,10 +107,12 @@ class ProfileActivity : BaseActivity(), OnClickListener {
                 Utils.saveStringInSP(
                     this, PreferenceConstant.MOBILE_NUMBER, binding.phoneNumberEt.text.toString()
                 )
-                val returnIntent = Intent()/*   returnIntent.putExtra("profile_name", binding.nameEt.text.toString())
+                /* val returnIntent = Intent()*//*   returnIntent.putExtra("profile_name", binding.nameEt.text.toString())
                    returnIntent.putExtra("mobile_number", binding.phoneNumberEt.text.toString())
-                   returnIntent.putExtra("img_url", Utils.getStringInSP(this, "img_url"))*/
-                setResult(RESULT_OK, returnIntent)
+                   returnIntent.putExtra("img_url", Utils.getStringInSP(this, "img_url"))*//*
+                setResult(RESULT_OK, returnIntent)*/
+                val intent = Intent(this, HomeActivity::class.java)
+                startActivity(intent)
                 finish()
             }
         }
@@ -201,7 +203,7 @@ class ProfileActivity : BaseActivity(), OnClickListener {
                 }
             } else if (requestCode == AVATAR_REQ_CODE) {
                 if (resultCode == RESULT_OK) {
-                    val avatarId = data?.getIntExtra(IntentConstants.AVATAR_ID, -1)
+                    val avatarId = data.getIntExtra(IntentConstants.AVATAR_ID, -1)
                     if (avatarId != null && avatarId != -1) {
                         Utils.saveBooleanInSP(this, PreferenceConstant.IS_AVATAR_SELECTED, true)
                         Utils.saveStringInSP(this, PreferenceConstant.PROFILE_IMG, "")

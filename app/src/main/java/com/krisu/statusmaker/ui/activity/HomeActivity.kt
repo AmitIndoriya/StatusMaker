@@ -89,7 +89,7 @@ class HomeActivity : BaseActivity(), OnClickListener {
         viewModel.categoryResponse.observe(this) { response ->
             when (response) {
                 is NetworkResult.Success -> {
-
+                    binding.progressbar.visibility = View.GONE
                     response.data?.let {
                         it.data.add(0, CategoryBean("0", "सभी"))
                         categoryBottomSheet = CategoryBottomSheet.getInstance(it.data)
@@ -98,41 +98,47 @@ class HomeActivity : BaseActivity(), OnClickListener {
                 }
 
                 is NetworkResult.Error -> {
+                    binding.progressbar.visibility = View.GONE
                 }
 
                 is NetworkResult.Loading -> {
+                    binding.progressbar.visibility = View.VISIBLE
                 }
             }
         }
         viewModel.allImageResponse.observe(this) { response ->
             when (response) {
                 is NetworkResult.Success -> {
+                    binding.progressbar.visibility = View.GONE
                     response.data?.let {
                         addItem(it.data, null)
                     }
                 }
 
                 is NetworkResult.Error -> {
+                    binding.progressbar.visibility = View.GONE
                 }
 
                 is NetworkResult.Loading -> {
-
+                    binding.progressbar.visibility = View.VISIBLE
                 }
             }
         }
         viewModel.catImageResponse.observe(this) { response ->
             when (response) {
                 is NetworkResult.Success -> {
+                    binding.progressbar.visibility = View.GONE
                     response.data?.let {
                         replaceItem(it.data)
                     }
                 }
 
                 is NetworkResult.Error -> {
+                    binding.progressbar.visibility = View.GONE
                 }
 
                 is NetworkResult.Loading -> {
-
+                    binding.progressbar.visibility = View.VISIBLE
                 }
             }
         }
@@ -197,9 +203,16 @@ class HomeActivity : BaseActivity(), OnClickListener {
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 101 && resultCode == RESULT_OK) {
-            setProfileData()
-            adapter.notifyDataSetChanged()
-        }
+        /* if (requestCode == 101 && resultCode == RESULT_OK) {
+             setProfileData()
+             adapter.notifyDataSetChanged()
+         }*/
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setProfileData()
+        adapter.notifyDataSetChanged()
     }
 }
