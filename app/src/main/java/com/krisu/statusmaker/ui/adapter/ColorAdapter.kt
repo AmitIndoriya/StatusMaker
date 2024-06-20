@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.krisu.statusmaker.R
 import com.krisu.statusmaker.ui.activity.CreateStatusActivity
 import com.krisu.statusmaker.ui.fragment.ColorFragment
+import com.krisu.statusmaker.ui.fragment.MultiColorFragment
 import com.krisu.statusmaker.ui.fragment.ShadowFragment
 import com.krisu.statusmaker.ui.fragment.ShareStatusFragment
 
@@ -23,7 +24,9 @@ import com.krisu.statusmaker.ui.fragment.ShareStatusFragment
 class ColorAdapter(
     private val context: CreateStatusActivity,
     private val parent: Fragment?,
-    private val childFrag: Fragment?
+    private val childFrag: Fragment?,
+    private val num: Int = 0,
+    private var selectedPos: Int = 0
 ) : RecyclerView.Adapter<ColorAdapter.CourseViewHolder>() {
     private val colorList: IntArray = intArrayOf(
         R.color.color1,
@@ -102,10 +105,24 @@ class ColorAdapter(
             } else {
                 holder.linearLayout.setBackgroundResource(R.drawable.circle_light_gray)
             }
+        } else if (childFrag is MultiColorFragment) {
+            if (position == selectedPos) {
+                holder.linearLayout.setBackgroundResource(R.drawable.circle_light_gray_red_border)
+            } else {
+                holder.linearLayout.setBackgroundResource(R.drawable.circle_light_gray)
+            }
         }
 
         holder.imageView.setOnClickListener {
-            if (parent is ShareStatusFragment) {
+            if (childFrag is MultiColorFragment) {
+                if (num == 1) {
+                    childFrag.textColor = position
+                } else if (num == 2) {
+                    childFrag.shadowColor = position
+                }
+                selectedPos = position
+                notifyDataSetChanged()
+            } else if (parent is ShareStatusFragment) {
                 parent.changeColor(colorList[position], position)
                 notifyDataSetChanged()
             }

@@ -37,7 +37,8 @@
                 android:minHeight="?attr/actionBarSize"
                 app:tabIndicator="@drawable/tab_indicator"
                 app:tabIndicatorColor="@color/gold"
-                app:tabIndicatorHeight="4dp" />
+                app:tabIndicatorHeight="4dp"
+                app:tabMode="scrollable" />
 
             <View
                 android:layout_width="match_parent"

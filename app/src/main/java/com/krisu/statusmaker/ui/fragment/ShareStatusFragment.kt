@@ -1,5 +1,6 @@
 package com.krisu.statusmaker.ui.fragment
 
+
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.Bitmap
@@ -8,7 +9,11 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.text.SpannableString
+import android.text.Spanned
 import android.text.TextUtils
+import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -30,14 +35,15 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayout
 import com.krisu.statusmaker.R
 import com.krisu.statusmaker.databinding.FragShareStatusLayoutBinding
+import com.krisu.statusmaker.model.MultiColorBean
 import com.krisu.statusmaker.ui.activity.CreateStatusActivity
-import com.krisu.statusmaker.ui.activity.HomeActivity
 import com.krisu.statusmaker.ui.adapter.ViewPagerAdapter
 import com.krisu.statusmaker.ui.callback.TextEditListener
 import com.krisu.statusmaker.utils.PreferenceConstant
 import com.krisu.statusmaker.utils.Utils
 import com.squareup.picasso.Picasso
 import kotlin.math.roundToInt
+
 
 class ShareStatusFragment : BaseFragment(), TextEditListener {
     lateinit var activity: CreateStatusActivity
@@ -67,12 +73,19 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
                 binding.profileImg.setImageDrawable(it[avatarId]?.drawable)
             }
         }
+        activity.multiColorBeanLD.observe(activity) {
+            binding.textView.text =
+                applyTint(it, activity.suvicharStr, false)
+            binding.shadowTextview.text =
+                applyTint(it, activity.suvicharStr, true)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
+        Log.i("test", "onCreateView")
         binding = FragShareStatusLayoutBinding.inflate(inflater, container, false)
         bottomSheetBehavior = BottomSheetBehavior.from(binding.layout.persistentBottomSheet)
         bottomSheetBehavior.isHideable = false
@@ -80,12 +93,11 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
         setupViewPager(binding.layout.tabViewpager)
         setTouchListener()
         setData()
-        addObservers()
         activity.changeToolbar(resources.getString(R.string.create_status), 2)
         Handler().postDelayed({
             (adapter.getItem(0) as FontFragment).setSeekbarLimit()
         }, 10)
-
+        addObservers()
         return binding.root
     }
 
@@ -96,10 +108,12 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
         adapter.addFragment(ColorFragment(), "color")
         adapter.addFragment(AlignmentFragment(), "Alignment")
         adapter.addFragment(ShadowFragment(), "Shadow")
+        adapter.addFragment(MultiColorFragment(), "Multi Color")
+
         viewpager.adapter = adapter
         binding.layout.tabTablayout.setupWithViewPager(binding.layout.tabViewpager)
-        val tabText = arrayListOf("Fonts", "Color", "Align", "Shadow")
-        for (i in 0..3) {
+        val tabText = arrayListOf("Fonts", "Color", "Align", "Shadow", "Multi Color")
+        for (i in 0..4) {
             getTabView(i, tabText[i]).also {
                 binding.layout.tabTablayout.getTabAt(i)?.customView = it
             }
@@ -154,7 +168,6 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
             activity.textSize = scaleFact
         }
     }
-
 
     @SuppressLint("ClickableViewAccessibility")
     fun setTouchListener() {
@@ -240,19 +253,13 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
                 binding.imageView.setImageBitmap(bitmap)
                 val palette = bitmap?.let { Palette.from(it).generate() }
                 setupColorProfileBg(
-                    palette?.vibrantSwatch,
-                    binding.profileBg1,
-                    R.drawable.rect_rounded_bg2
+                    palette?.vibrantSwatch, binding.profileBg1, R.drawable.rect_rounded_bg2
                 )
                 setupColorProfileBg(
-                    palette?.darkVibrantSwatch,
-                    binding.profileBg2,
-                    R.drawable.rect_rounded_bg2
+                    palette?.darkVibrantSwatch, binding.profileBg2, R.drawable.rect_rounded_bg2
                 )
                 setupTransparentColor(
-                    palette?.vibrantSwatch,
-                    binding.linearLayout,
-                    R.drawable.rect_rounded_bg1
+                    palette?.vibrantSwatch, binding.linearLayout, R.drawable.rect_rounded_bg1
                 )
             }
 
@@ -264,9 +271,7 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
                 //binding.imageView.setImageResource(R.drawable.default_suvichar_bg)
             }
         }
-        Picasso.with(context)
-            .load(url)
-            .into(target)
+        Picasso.with(context).load(url).into(target)
     }
 
     private fun setData() {
@@ -290,10 +295,10 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
         if (!TextUtils.isEmpty(Utils.getStringInSP(activity, PreferenceConstant.PROFILE_NAME))) {
             binding.profileName.text =
                 Utils.getStringInSP(activity, PreferenceConstant.PROFILE_NAME)
+
         }
         if (!TextUtils.isEmpty(Utils.getStringInSP(activity, PreferenceConstant.MOBILE_NUMBER))) {
-            binding.numberTv.text =
-                Utils.getStringInSP(activity, PreferenceConstant.MOBILE_NUMBER)
+            binding.numberTv.text = Utils.getStringInSP(activity, PreferenceConstant.MOBILE_NUMBER)
         }
         if (Utils.getBooleanInSP(activity, PreferenceConstant.IS_AVATAR_SELECTED)) {
             (context as CreateStatusActivity).viewModel.getAvatarList()
@@ -335,5 +340,33 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
 
     fun shareStatus() {
         activity.viewToImage(binding.container, "")
+    }
+
+    private fun applyTint(
+        hashMap: HashMap<Int, MultiColorBean>,
+        string: String,
+        isShadow: Boolean
+    ): SpannableString {
+        val colorList = activity.viewModel.getColorList()
+        val spannableString = SpannableString(string)
+        for (i in 0 until hashMap.size) {
+            val color: Int = if (isShadow) {
+                activity.resources.getColor(colorList[hashMap[i]!!.shadowColor])
+            } else {
+                activity.resources.getColor(colorList[hashMap[i]!!.textColor])
+            }
+            var start = hashMap[i]!!.start
+            var end = hashMap[i]!!.end
+            if (start < 0) {
+                start = 0
+            }
+            if (end > string.length) {
+                end = string.length
+            }
+            val fcs = ForegroundColorSpan(color)
+            spannableString.setSpan(fcs, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+
+        return spannableString
     }
 }

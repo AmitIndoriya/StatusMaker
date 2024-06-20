@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
 import com.krisu.statusmaker.R
 import com.krisu.statusmaker.databinding.ActCreateStatusLayoutBinding
+import com.krisu.statusmaker.model.MultiColorBean
 import com.krisu.statusmaker.ui.fragment.ChangeBackgroundFragment
 import com.krisu.statusmaker.ui.fragment.CreateStatusFragment
 import com.krisu.statusmaker.ui.fragment.ShareStatusFragment
@@ -40,6 +41,8 @@ class CreateStatusActivity : BaseActivity(), OnClickListener, ChangeBackgroundFr
     var selectedFontNum = 0
     var selectedTextColorNum = 0
     var selectedStrokeColorNum = 0
+    val multiColorBeanLD = MutableLiveData<HashMap<Int, MultiColorBean>>()
+    val multiColorMap = HashMap<Int, MultiColorBean>()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -198,4 +201,6 @@ class CreateStatusActivity : BaseActivity(), OnClickListener, ChangeBackgroundFr
             }
         }
     }
+
+
 }

@@ -3,6 +3,7 @@ package com.krisu.statusmaker.viewmodel
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.krisu.statusmaker.R
 import com.krisu.statusmaker.data.HomeRepository
 import com.krisu.statusmaker.model.CategoryResponse
 import com.krisu.statusmaker.model.GetAllmagesResponse
@@ -107,6 +108,54 @@ class CreateStatusViewModel @Inject constructor
             catImageResponse.value = values
         }
     }
-
+    fun getColorList(): IntArray {
+        return intArrayOf(
+            R.color.color1,
+            R.color.color2,
+            R.color.color3,
+            R.color.color4,
+            R.color.color5,
+            R.color.color6,
+            R.color.color7,
+            R.color.color8,
+            R.color.color9,
+            R.color.color10,
+            R.color.color11,
+            R.color.color12,
+            R.color.color13,
+            R.color.color14,
+            R.color.color15,
+            R.color.color16,
+            R.color.color17,
+            R.color.color18,
+            R.color.color19,
+            R.color.color20,
+            R.color.color21,
+            R.color.color22,
+            R.color.color23,
+            R.color.color24,
+            R.color.color25,
+            R.color.color26,
+            R.color.color27,
+            R.color.color28,
+            R.color.color29,
+            R.color.color30,
+            R.color.color31,
+            R.color.color32,
+            R.color.color33,
+            R.color.color34,
+            R.color.color35,
+            R.color.color36,
+            R.color.color37,
+            R.color.color38,
+            R.color.color39,
+            R.color.color40,
+            R.color.color41,
+            R.color.color42,
+            R.color.color43,
+            R.color.color44,
+            R.color.color45
+        )
+    }
 
 }

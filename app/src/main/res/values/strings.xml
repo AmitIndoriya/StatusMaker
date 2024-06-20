@@ -22,4 +22,5 @@
     <string name="select_background">Select Background</string>
     <string name="share_status">Share Status</string>
     <string name="font">Font</string>
+    <string name="add">Add</string>
 </resources>

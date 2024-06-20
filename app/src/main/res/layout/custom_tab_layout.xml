@@ -12,5 +12,4 @@
         android:textColor="@color/black"
         android:paddingHorizontal="8dp" />
 
-
 </RelativeLayout>
