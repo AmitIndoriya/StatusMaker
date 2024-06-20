@@ -27,7 +27,7 @@
                         style="@style/laila_medium_16"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/_8sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toStartOf="@+id/cat_iv"
                         android:background="@drawable/rect_white_solid_30"
                         android:gravity="center"
@@ -41,7 +41,7 @@
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/_8sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toStartOf="@+id/share_app_iv"
                         android:src="@drawable/ic_category" />
 
@@ -50,7 +50,7 @@
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/_8sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toStartOf="@+id/profile_iv"
                         android:src="@drawable/ic_share_app" />
 

@@ -6,17 +6,12 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.krisu.statusmaker.R
 import com.krisu.statusmaker.ui.activity.CreateStatusActivity
-import com.krisu.statusmaker.ui.fragment.CreateStatusFragment
 import com.krisu.statusmaker.ui.fragment.ShareStatusFragment
 import com.krisu.statusmaker.utils.Utils
 
@@ -113,6 +108,7 @@ class FontAdapter(
         }
         holder.textView.setOnClickListener {
             context.selectedFontNum = position
+            context.selectedFont = fontList[position]
             if (fragment is ShareStatusFragment) {
                 fragment.changeFont(fontList[position])
             }

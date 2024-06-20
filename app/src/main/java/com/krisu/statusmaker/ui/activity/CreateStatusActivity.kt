@@ -176,7 +176,8 @@ class CreateStatusActivity : BaseActivity(), OnClickListener, ChangeBackgroundFr
             }
 
             R.id.back_iv -> {
-                finish()
+                /*finish()*/
+                doActionOnBackPress()
             }
         }
     }
@@ -202,5 +203,13 @@ class CreateStatusActivity : BaseActivity(), OnClickListener, ChangeBackgroundFr
         }
     }
 
+    private fun doActionOnBackPress() {
+        val count = supportFragmentManager.backStackEntryCount
+        if (count > 0) {
+            supportFragmentManager.popBackStack()
+        } else {
+            finish()
+        }
+    }
 
 }
