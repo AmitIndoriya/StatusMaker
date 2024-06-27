@@ -37,6 +37,7 @@ class CreateStatusActivity : BaseActivity(), OnClickListener, ChangeBackgroundFr
     var textStrokeWidth = 5f
     var strokeColor = R.color.black
     var textAlignMent = 1
+    var spacing = 0f
     var selectedFont = "Laila-SemiBold.ttf"
     var selectedFontNum = 0
     var selectedTextColorNum = 0

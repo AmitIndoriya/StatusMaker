@@ -37,6 +37,7 @@ import com.krisu.statusmaker.R
 import com.krisu.statusmaker.databinding.FragShareStatusLayoutBinding
 import com.krisu.statusmaker.model.MultiColorBean
 import com.krisu.statusmaker.ui.activity.CreateStatusActivity
+import com.krisu.statusmaker.ui.adapter.SpaceingFragment
 import com.krisu.statusmaker.ui.adapter.ViewPagerAdapter
 import com.krisu.statusmaker.ui.callback.TextEditListener
 import com.krisu.statusmaker.utils.PreferenceConstant
@@ -109,11 +110,12 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
         adapter.addFragment(AlignmentFragment(), "Alignment")
         adapter.addFragment(ShadowFragment(), "Shadow")
         adapter.addFragment(MultiColorFragment(), "Multi Color")
+        adapter.addFragment(SpaceingFragment(), "Spacing")
 
         viewpager.adapter = adapter
         binding.layout.tabTablayout.setupWithViewPager(binding.layout.tabViewpager)
-        val tabText = arrayListOf("Fonts", "Color", "Align", "Shadow", "Multi Color")
-        for (i in 0..4) {
+        val tabText = arrayListOf("Fonts", "Color", "Align", "Shadow", "Multi Color", "Spacing")
+        for (i in 0 until tabText.size) {
             getTabView(i, tabText[i]).also {
                 binding.layout.tabTablayout.getTabAt(i)?.customView = it
             }
@@ -247,6 +249,29 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
 
     }
 
+    fun changeLetterSpacing(space: Float) {
+        activity.spacing = space
+        binding.shadowTextview.letterSpacing = space
+        binding.textView.letterSpacing = space
+    }
+
+    fun changeLineSpacing(space: Float) {
+        binding.shadowTextview.setLineSpacing(
+            TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                space,
+                resources.displayMetrics
+            ), 1.0f
+        )
+        binding.textView.setLineSpacing(
+            TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP,
+                space,
+                resources.displayMetrics
+            ), 1.0f
+        )
+    }
+
     private fun changeBackground(url: String) {
         val target = object : com.squareup.picasso.Target {
             override fun onBitmapLoaded(bitmap: Bitmap?, from: Picasso.LoadedFrom?) {
@@ -274,6 +299,7 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
         Picasso.with(context).load(url).into(target)
     }
 
+
     private fun setData() {
         binding.textView.text = activity.suvicharStr
         binding.textView.setTextColor(resources.getColor(activity.textColor))
@@ -288,6 +314,7 @@ class ShareStatusFragment : BaseFragment(), TextEditListener {
         binding.shadowTextview.setTextColor(resources.getColor(activity.strokeColor))
         binding.shadowTextview.typeface = Utils.getCustomFont(activity, activity.selectedFont)
         changeAlignment(activity.textAlignMent)
+        changeLetterSpacing(activity.spacing)
         setProfileData()
     }
 

@@ -48,6 +48,9 @@ class FontAdapter(
         "Shrikhand-Regular.ttf",
         "Times-New-Roman-Bold-Italic.ttf",
         "weddingdaypersonaluseregular.ttf",
+        "huddlestone.otf",
+        "lemondropsbold.otf",
+        "airtravelersbdit.otf"
     )
 
     override fun onCreateViewHolder(
