@@ -72,5 +72,8 @@
     <color name="light_green_new">#DFFFD9</color>
     <color name="dark_green_new">#027148</color>
     <color name="text_color">#5b5b5b</color>
-
+    <color name="orange">#FF5722</color>
+    <color name="whiteDark">#F3F3F3</color>
+    <color name="purple">#993399</color>
+    <color name="purpleDark">#663399</color>
 </resources>

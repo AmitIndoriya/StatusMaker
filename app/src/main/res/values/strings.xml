@@ -23,4 +23,28 @@
     <string name="share_status">Share Status</string>
     <string name="font">Font</string>
     <string name="add">Add</string>
+
+    <string name="crop_image_activity_title">Crop</string>
+    <string name="crop_image_menu_rotate_left">Rotate counter clockwise</string>
+    <string name="crop_image_menu_rotate_right">Rotate</string>
+    <string name="crop_image_menu_crop">Crop</string>
+    <string name="crop_image_menu_flip">Flip</string>
+    <string name="crop_image_menu_flip_horizontally">Flip horizontally</string>
+    <string name="crop_image_menu_flip_vertically">Flip vertically</string>
+
+    <string name="pick_image_intent_chooser_title">Select source</string>
+
+    <string name="crop_image_activity_no_permissions">Cancelling, required permissions are not granted</string>
+
+    <string name="ic_rotate_left_24">Rotate counter clockwise</string>
+    <string name="ic_rotate_right_24">Rotate</string>
+
+    <string name="ic_flip_24">Flip</string>
+    <string name="ic_flip_24_horizontally">Flip horizontally</string>
+    <string name="ic_flip_24_vertically">Flip vertically</string>
+    <string name="pick_image_chooser_title">Select source</string>
+    <string name="pick_image_camera">Camera</string>
+    <string name="pick_image_gallery">Gallery</string>
+    <string name="rotation_value">Click to change rotation: %1$s</string>
+    <string name="save">Save</string>
 </resources>

@@ -1,29 +1,40 @@
 package com.krisu.statusmaker.ui.activity
 
+/*import com.theartofdev.edmodo.cropper.CropImage*/
+
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.RelativeLayout
 import android.widget.Toast
+import androidx.activity.result.ActivityResultCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import com.canhub.cropper.CropImage
+import com.canhub.cropper.CropImageActivity
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageContractOptions
+import com.canhub.cropper.CropImageOptions
+import com.canhub.cropper.CropImageView
+import com.canhub.cropper.sample.SampleCustomActivity
 import com.krisu.statusmaker.R
 import com.krisu.statusmaker.databinding.ActProfileLayoutBinding
 import com.krisu.statusmaker.model.ProfileDetailModel
 import com.krisu.statusmaker.ui.dialog.ProfileImgChooserBottomSheet
-import com.krisu.statusmaker.utils.IntentConstants
 import com.krisu.statusmaker.utils.PermissionHelper
 import com.krisu.statusmaker.utils.PreferenceConstant
 import com.krisu.statusmaker.utils.Utils
 import com.krisu.statusmaker.viewmodel.ProfileViewModel
 import com.squareup.picasso.Picasso
-import com.theartofdev.edmodo.cropper.CropImage
 import dagger.hilt.android.AndroidEntryPoint
-
+import com.canhub.cropper.CropImage.ActivityResult
+import com.krisu.statusmaker.utils.IntentConstants
 
 @AndroidEntryPoint
 class ProfileActivity : BaseActivity(), OnClickListener {
@@ -169,7 +180,7 @@ class ProfileActivity : BaseActivity(), OnClickListener {
         if (!permissionHelper.checkCameraPermission()) {
             permissionHelper.requestCameraPermission()
         } else {
-            CropImage.activity().start(this@ProfileActivity)
+            //CropImage.activity().start(this@ProfileActivity)
         }
 
     }
@@ -178,7 +189,10 @@ class ProfileActivity : BaseActivity(), OnClickListener {
         if (!permissionHelper.checkCameraPermission()) {
             permissionHelper.requestCameraPermission()
         } else {
-            CropImage.activity().start(this@ProfileActivity)
+            // CropImage.activity().start(this@ProfileActivity)
+            //SampleCustomActivity.start(this)
+            val intent = Intent(this, CropImageActivity::class.java)
+            startActivityForResult(intent, 1001)
         }
     }
 
@@ -186,34 +200,73 @@ class ProfileActivity : BaseActivity(), OnClickListener {
         startActivityForResult(Intent(this, AvatarActivity::class.java), AVATAR_REQ_CODE)
     }
 
+    var cropImage =
+        registerForActivityResult<CropImageContractOptions, CropImageView.CropResult>(
+            CropImageContract(),
+            ActivityResultCallback<CropImageView.CropResult> { result: CropImageView.CropResult ->
+                if (result.isSuccessful) {
+                    val cropped =
+                        BitmapFactory.decodeFile(result.getUriFilePath(applicationContext, true))
+                }
+            })
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (data != null) {
 
 
-            if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-                val result: CropImage.ActivityResult = CropImage.getActivityResult(data)
+            if (requestCode == 1001) {
                 if (resultCode == RESULT_OK) {
-                    imageuri = result.uri
+                    val result: ActivityResult =
+                        data.extras?.getParcelable(CropImage.CROP_IMAGE_EXTRA_RESULT)!!
+                    imageuri = result.uriContent
                     profileDetail.imageUrl = imageuri.toString()
                     Utils.saveBooleanInSP(this, PreferenceConstant.IS_AVATAR_SELECTED, false)
                     Utils.saveStringInSP(this, PreferenceConstant.PROFILE_IMG, imageuri.toString())
                     Utils.saveIntInSP(this, PreferenceConstant.AVATAR_ID, -1)
                     Picasso.with(this).load(imageuri).into(binding.profileImg)
-                }
-            } else if (requestCode == AVATAR_REQ_CODE) {
-                if (resultCode == RESULT_OK) {
-                    val avatarId = data.getIntExtra(IntentConstants.AVATAR_ID, -1)
-                    if (avatarId != null && avatarId != -1) {
-                        Utils.saveBooleanInSP(this, PreferenceConstant.IS_AVATAR_SELECTED, true)
-                        Utils.saveStringInSP(this, PreferenceConstant.PROFILE_IMG, "")
-                        Utils.saveIntInSP(this, PreferenceConstant.AVATAR_ID, avatarId)
-                        viewModel.getAvatarList()
+                } else if (requestCode == AVATAR_REQ_CODE) {
+                    if (resultCode == RESULT_OK) {
+                        val avatarId = data.getIntExtra(IntentConstants.AVATAR_ID, -1)
+                        if (avatarId != null && avatarId != -1) {
+                            Utils.saveBooleanInSP(this, PreferenceConstant.IS_AVATAR_SELECTED, true)
+                            Utils.saveStringInSP(this, PreferenceConstant.PROFILE_IMG, "")
+                            Utils.saveIntInSP(this, PreferenceConstant.AVATAR_ID, avatarId)
+                            viewModel.getAvatarList()
+                        }
                     }
                 }
             }
         }
     }
+    /* override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+         super.onActivityResult(requestCode, resultCode, data)
+         if (data != null) {
+
+
+             if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+                 val result: CropImage.ActivityResult = CropImage.getActivityResult(data)
+                 if (resultCode == RESULT_OK) {
+                     imageuri = result.uri
+                     profileDetail.imageUrl = imageuri.toString()
+                     Utils.saveBooleanInSP(this, PreferenceConstant.IS_AVATAR_SELECTED, false)
+                     Utils.saveStringInSP(this, PreferenceConstant.PROFILE_IMG, imageuri.toString())
+                     Utils.saveIntInSP(this, PreferenceConstant.AVATAR_ID, -1)
+                     Picasso.with(this).load(imageuri).into(binding.profileImg)
+                 }
+             } else if (requestCode == AVATAR_REQ_CODE) {
+                 if (resultCode == RESULT_OK) {
+                     val avatarId = data.getIntExtra(IntentConstants.AVATAR_ID, -1)
+                     if (avatarId != null && avatarId != -1) {
+                         Utils.saveBooleanInSP(this, PreferenceConstant.IS_AVATAR_SELECTED, true)
+                         Utils.saveStringInSP(this, PreferenceConstant.PROFILE_IMG, "")
+                         Utils.saveIntInSP(this, PreferenceConstant.AVATAR_ID, avatarId)
+                         viewModel.getAvatarList()
+                     }
+                 }
+             }
+         }
+     }*/
 
     override fun onClick(v: View) {
         when (v.id) {
