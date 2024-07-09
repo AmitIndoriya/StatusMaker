@@ -180,7 +180,8 @@ class ProfileActivity : BaseActivity(), OnClickListener {
         if (!permissionHelper.checkCameraPermission()) {
             permissionHelper.requestCameraPermission()
         } else {
-            //CropImage.activity().start(this@ProfileActivity)
+            val intent = Intent(this, CropImageActivity::class.java)
+            startActivityForResult(intent, 1001)
         }
 
     }
@@ -189,8 +190,6 @@ class ProfileActivity : BaseActivity(), OnClickListener {
         if (!permissionHelper.checkCameraPermission()) {
             permissionHelper.requestCameraPermission()
         } else {
-            // CropImage.activity().start(this@ProfileActivity)
-            //SampleCustomActivity.start(this)
             val intent = Intent(this, CropImageActivity::class.java)
             startActivityForResult(intent, 1001)
         }
@@ -199,16 +198,6 @@ class ProfileActivity : BaseActivity(), OnClickListener {
     fun openAvatar() {
         startActivityForResult(Intent(this, AvatarActivity::class.java), AVATAR_REQ_CODE)
     }
-
-    var cropImage =
-        registerForActivityResult<CropImageContractOptions, CropImageView.CropResult>(
-            CropImageContract(),
-            ActivityResultCallback<CropImageView.CropResult> { result: CropImageView.CropResult ->
-                if (result.isSuccessful) {
-                    val cropped =
-                        BitmapFactory.decodeFile(result.getUriFilePath(applicationContext, true))
-                }
-            })
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -225,19 +214,20 @@ class ProfileActivity : BaseActivity(), OnClickListener {
                     Utils.saveStringInSP(this, PreferenceConstant.PROFILE_IMG, imageuri.toString())
                     Utils.saveIntInSP(this, PreferenceConstant.AVATAR_ID, -1)
                     Picasso.with(this).load(imageuri).into(binding.profileImg)
-                } else if (requestCode == AVATAR_REQ_CODE) {
-                    if (resultCode == RESULT_OK) {
-                        val avatarId = data.getIntExtra(IntentConstants.AVATAR_ID, -1)
-                        if (avatarId != null && avatarId != -1) {
-                            Utils.saveBooleanInSP(this, PreferenceConstant.IS_AVATAR_SELECTED, true)
-                            Utils.saveStringInSP(this, PreferenceConstant.PROFILE_IMG, "")
-                            Utils.saveIntInSP(this, PreferenceConstant.AVATAR_ID, avatarId)
-                            viewModel.getAvatarList()
-                        }
+                }
+            } else if (requestCode == AVATAR_REQ_CODE) {
+                if (resultCode == RESULT_OK) {
+                    val avatarId = data.getIntExtra(IntentConstants.AVATAR_ID, -1)
+                    if (avatarId != null && avatarId != -1) {
+                        Utils.saveBooleanInSP(this, PreferenceConstant.IS_AVATAR_SELECTED, true)
+                        Utils.saveStringInSP(this, PreferenceConstant.PROFILE_IMG, "")
+                        Utils.saveIntInSP(this, PreferenceConstant.AVATAR_ID, avatarId)
+                        viewModel.getAvatarList()
                     }
                 }
             }
         }
+
     }
     /* override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
          super.onActivityResult(requestCode, resultCode, data)
