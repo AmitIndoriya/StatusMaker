@@ -93,7 +93,7 @@ open class BaseActivity : AppCompatActivity() {
         val contentUri =
             FileProvider.getUriForFile(
                 this,
-                "com.krisu.statusmaker.fileprovider",
+                "com.krisu.statusmaker.provider",
                 newFile
             )
 

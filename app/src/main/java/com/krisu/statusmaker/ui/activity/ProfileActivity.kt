@@ -4,25 +4,17 @@ package com.krisu.statusmaker.ui.activity
 
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.RelativeLayout
 import android.widget.Toast
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import com.canhub.cropper.CropImage
 import com.canhub.cropper.CropImageActivity
-import com.canhub.cropper.CropImageContract
-import com.canhub.cropper.CropImageContractOptions
-import com.canhub.cropper.CropImageOptions
-import com.canhub.cropper.CropImageView
-import com.canhub.cropper.sample.SampleCustomActivity
 import com.krisu.statusmaker.R
 import com.krisu.statusmaker.databinding.ActProfileLayoutBinding
 import com.krisu.statusmaker.model.ProfileDetailModel
@@ -97,6 +89,11 @@ class ProfileActivity : BaseActivity(), OnClickListener {
 
     private fun setListeners() {
         binding.backIv.setOnClickListener {
+            finish()
+        }
+        binding.skipBtn.setOnClickListener {
+            val intent = Intent(this, HomeActivity::class.java)
+            startActivity(intent)
             finish()
         }
         binding.profileImgContainer.setOnClickListener {
@@ -202,7 +199,6 @@ class ProfileActivity : BaseActivity(), OnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (data != null) {
-
 
             if (requestCode == 1001) {
                 if (resultCode == RESULT_OK) {

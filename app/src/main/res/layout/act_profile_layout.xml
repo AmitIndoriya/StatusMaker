@@ -185,6 +185,24 @@
             android:textColor="@color/white"
             android:textSize="@dimen/_14ssp" />
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/skip_btn"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/continue_btn"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_8sdp"
+            android:elevation="@dimen/_3sdp"
+            android:fontFamily="@font/laila_semibold"
+            android:paddingHorizontal="@dimen/_60sdp"
+            android:paddingVertical="@dimen/_9sdp"
+            android:text="@string/skip"
+            android:textAllCaps="false"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14ssp" />
+
 
     </RelativeLayout>
 </layout>
