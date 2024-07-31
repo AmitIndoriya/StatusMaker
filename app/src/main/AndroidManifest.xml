@@ -2,9 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- <uses-feature
+         android:name="android.hardware.camera"
+         android:required="false" />-->
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false" />
+        android:required="true" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -14,6 +17,7 @@
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
 
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -26,15 +30,15 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/app_icon"
+        android:icon="@drawable/digital_world"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/app_icon"
+        android:roundIcon="@drawable/digital_world"
         android:supportsRtl="true"
         android:theme="@style/Theme.StatusMaker"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".ui.activity.HomeActivity"
+            android:name=".ui.activity.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,12 +46,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:name="com.canhub.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
             android:name=".ui.activity.ProfileActivity"
             android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.activity.HomeActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.activity.EditDesignActivity"
@@ -57,15 +67,24 @@
             android:name=".ui.activity.AvatarActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.activity.CreateStatusActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustNothing|stateVisible" />
+        <activity
+            android:name=".ui.activity.ShareStatusActivity"
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.krisu.statusmaker.fileprovider"
+            android:authorities="com.krisu.statusmaker.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths" />
+                android:resource="@xml/filepaths_new" />
         </provider>
     </application>
 

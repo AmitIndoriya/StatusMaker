@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/add_tv"
+                style="@style/laila_medium_12"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/rect_white_with_border"
+                android:paddingHorizontal="@dimen/_20sdp"
+                android:paddingVertical="@dimen/_6sdp"
+                android:text="@string/add"
+                android:textAllCaps="true" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/add_tv"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:gravity="center_vertical" />
+
+        </RelativeLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

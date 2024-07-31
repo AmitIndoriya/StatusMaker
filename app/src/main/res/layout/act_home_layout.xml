@@ -27,7 +27,7 @@
                         style="@style/laila_medium_16"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/_8sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
                         android:layout_toStartOf="@+id/cat_iv"
                         android:background="@drawable/rect_white_solid_30"
                         android:gravity="center"
@@ -41,9 +41,18 @@
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/_8sdp"
-                        android:layout_toStartOf="@+id/profile_iv"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:layout_toStartOf="@+id/share_app_iv"
                         android:src="@drawable/ic_category" />
+
+                    <ImageView
+                        android:id="@+id/share_app_iv"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:layout_toStartOf="@+id/profile_iv"
+                        android:src="@drawable/ic_share_app" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/profile_iv"
@@ -58,10 +67,30 @@
             </androidx.appcompat.widget.Toolbar>
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbar_ll" />
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbar_ll">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/progressbar"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_centerInParent="true"
+                android:visibility="gone"
+                app:cardCornerRadius="@dimen/_30sdp">
+
+                <ProgressBar
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/_6sdp" />
+
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
     </RelativeLayout>
 </layout>
