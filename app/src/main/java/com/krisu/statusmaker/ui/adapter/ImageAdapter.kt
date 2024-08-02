@@ -54,9 +54,9 @@ class ImageAdapter(
     override fun onBindViewHolder(holder: MyView, position: Int) {
         Log.i("random", "" + distinctNumbers[position])
         // Picasso.with(context).load(imageList[distinctNumbers[position]].url).into(holder.imageView)
-        setupImage(imageList[distinctNumbers[position]].url, holder.imageView, holder.progressBar)
+        setupImage(imageList[distinctNumbers[position]].url!!, holder.imageView, holder.progressBar)
         holder.root.setOnClickListener {
-            (context as CreateStatusActivity).changeBackground(imageList[distinctNumbers[position]].url)
+            (context as CreateStatusActivity).changeBackground(imageList[distinctNumbers[position]].url!!)
         }
     }
 

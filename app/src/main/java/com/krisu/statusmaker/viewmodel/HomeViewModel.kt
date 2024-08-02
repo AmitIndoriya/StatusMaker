@@ -3,6 +3,7 @@ package com.krisu.statusmaker.viewmodel
 import android.app.Application
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -31,9 +32,10 @@ class HomeViewModel @Inject constructor
     val categoryResponse: MutableLiveData<NetworkResult<CategoryResponse>> = MutableLiveData()
     val allImageResponse: MutableLiveData<NetworkResult<GetAllmagesResponse>> = MutableLiveData()
     val catImageResponse: MutableLiveData<NetworkResult<GetAllmagesResponse>> = MutableLiveData()
-    val bitmapListLD: MutableLiveData<ArrayList<Bitmap>> = MutableLiveData()
+
 
     fun fetchCategories(langCode: String) = viewModelScope.launch {
+        categoryResponse.value=NetworkResult.Loading()
         repository.getCategories(langCode).collect { values ->
             categoryResponse.value = values
         }
@@ -44,12 +46,24 @@ class HomeViewModel @Inject constructor
             allImageResponse.value = values
         }
     }
+    fun fetchImages(page: Int,  size: Int) = viewModelScope.launch {
+        allImageResponse.value=NetworkResult.Loading()
+        repository.getAllImages(page,  size).collect { values ->
+            allImageResponse.value = values
+        }
+    }
 
     fun fetchImagesByCatId(id: String, langCode: String) = viewModelScope.launch {
+        catImageResponse.value=NetworkResult.Loading()
         repository.getImagesByCatId(id, langCode).collect { values ->
             catImageResponse.value = values
         }
     }
-
+    fun fetchImagesBySubCatId(id: String, langCode: String) = viewModelScope.launch {
+        catImageResponse.value=NetworkResult.Loading()
+        repository.getImagesBySubCatId(id, langCode).collect { values ->
+            catImageResponse.value = values
+        }
+    }
 
 }

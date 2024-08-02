@@ -59,7 +59,7 @@ class HomeRVAdapter(
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onBindViewHolder(holder: CourseViewHolder, position: Int) {
         setupImage(
-            arrayList[position].url,
+            arrayList[position].url!!,
             holder.imageView,
             holder.profileBg2,
             holder.profileName

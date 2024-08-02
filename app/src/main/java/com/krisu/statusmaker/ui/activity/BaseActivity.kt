@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.krisu.statusmaker.R
+import com.krisu.statusmaker.kprogresshud.KProgressHUD
 import com.krisu.statusmaker.utils.CacheStore
 import com.krisu.statusmaker.utils.Constants
 import java.io.File
@@ -21,7 +22,7 @@ import java.io.FileOutputStream
 import java.io.IOException
 
 open class BaseActivity : AppCompatActivity() {
-
+    private var kProgressHUD: KProgressHUD? = null
     fun setFullScreen() {
         window.setFlags(
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
@@ -141,6 +142,7 @@ open class BaseActivity : AppCompatActivity() {
             View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
     }
 
+
     fun shareApp() {
         val whatsappIntent = Intent(Intent.ACTION_SEND)
         whatsappIntent.type = "text/plain"
@@ -152,5 +154,21 @@ open class BaseActivity : AppCompatActivity() {
             startActivity(whatsappIntent)
         } catch (_: ActivityNotFoundException) {
         }
+    }
+
+    open fun showProgressbar() {
+        if (kProgressHUD == null) {
+            kProgressHUD = KProgressHUD.create(this)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setLabel("Please wait")
+                .setCancellable(true)
+                .setAnimationSpeed(2)
+                .setDimAmount(0.5f)
+        }
+        kProgressHUD?.show()
+    }
+
+    open fun hideProgressbar() {
+        kProgressHUD?.dismiss()
     }
 }

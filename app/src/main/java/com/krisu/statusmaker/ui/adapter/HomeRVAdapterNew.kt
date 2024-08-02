@@ -1,11 +1,11 @@
 package com.krisu.statusmaker.ui.adapter
 
+
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
-import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources
@@ -34,79 +35,84 @@ import de.hdodenhof.circleimageview.CircleImageView
 import java.util.Random
 import kotlin.math.roundToInt
 
+
 class HomeRVAdapterNew(
     private val context: Context,
     private val arrayList: ArrayList<ImageBean>,
     private val bitmapList: ArrayList<Bitmap>,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var target: com.squareup.picasso.Target
-    private var distinctNumbers: IntArray
+    private var distinctNumbers: ArrayList<Int>
+    private var ITEM = 0
+    private var LOADING = 50
+    private var isLoadingAdded = false
+    var min: Int = 0
+    var max: Int = arrayList.size
 
     init {
-        distinctNumbers = generateDistinctNumbers()
+        distinctNumbers = generateDistinctNumbers() as ArrayList<Int>
     }
 
-    val imgs = arrayOf(
-        "https://www.astroganit.com/status/special_day/special_day1.jpg",
-        "https://www.astroganit.com/status/special_day/special_day2.jpg",
-        "https://www.astroganit.com/status/special_day/special_day3.jpg",
-        "https://www.astroganit.com/status/special_day/special_day4.jpg",
-        "https://www.astroganit.com/status/special_day/special_day5.jpg",
-        "https://www.astroganit.com/status/special_day/special_day6.jpg",
-        "https://www.astroganit.com/status/special_day/special_day7.jpg",
-        "https://www.astroganit.com/status/special_day/special_day8.jpg",
-        "https://www.astroganit.com/status/special_day/special_day9.jpg",
-        "https://www.astroganit.com/status/special_day/special_day10.jpg",
-        "https://www.astroganit.com/status/special_day/special_day11.jpg",
-        "https://www.astroganit.com/status/special_day/special_day12.jpg",
-        "https://www.astroganit.com/status/special_day/special_day13.jpg",
-        "https://www.astroganit.com/status/special_day/special_day14.jpg",
-        "https://www.astroganit.com/status/special_day/special_day15.jpg",
-        "https://www.astroganit.com/status/special_day/special_day16.jpg",
-    )
-
-    private fun generateDistinctNumbers(): IntArray {
-        val numbers = (0 until arrayList.size).toMutableList()
+    private fun generateDistinctNumbers(): List<Int> {
+        val numbers = (min until max).toMutableList()
         numbers.shuffle(Random(System.currentTimeMillis()))
-        return numbers.take(arrayList.size).toIntArray()
+        val list = numbers.take(arrayList.size)
+        Log.i("list", "--$list")
+        return list
     }
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup, viewType: Int
-    ): RecyclerView.ViewHolder {
-
-        return when (viewType) {
-            0 -> HomeViewHolder1(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        Log.i("onCreateViewHolder", "onCreateViewHolder$viewType")
+        if (viewType == LOADING) {
+            return LoadingVH(
                 LayoutInflater.from(parent.context)
-                    .inflate(R.layout.list_item_home1, parent, false)
+                    .inflate(R.layout.item_progress, parent, false)
             )
+        } else {
+            return when (viewType % 4) {
+                0 -> HomeViewHolder1(
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.list_item_home1, parent, false)
+                )
 
-            1 -> HomeViewHolder2(
-                LayoutInflater.from(parent.context)
-                    .inflate(R.layout.list_item_home2, parent, false)
-            )
+                1 -> HomeViewHolder2(
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.list_item_home2, parent, false)
+                )
 
-            2 -> HomeViewHolder3(
-                LayoutInflater.from(parent.context)
-                    .inflate(R.layout.list_item_home3, parent, false)
-            )
+                2 -> HomeViewHolder3(
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.list_item_home3, parent, false)
+                )
 
-            3 -> HomeViewHolder4(
-                LayoutInflater.from(parent.context)
-                    .inflate(R.layout.list_item_home4, parent, false)
-            )
+                3 -> HomeViewHolder4(
+                    LayoutInflater.from(parent.context)
+                        .inflate(R.layout.list_item_home4, parent, false)
+                )
 
-            else -> throw IllegalArgumentException("Invalid view type")
+                else -> throw IllegalArgumentException("Invalid view type")
+            }
         }
+
+
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when (position % 4) {
-            0 -> (holder as HomeViewHolder1).bind(arrayList[distinctNumbers[position]].url)
-            1 -> (holder as HomeViewHolder2).bind(arrayList[distinctNumbers[position]].url)
-            2 -> (holder as HomeViewHolder3).bind(arrayList[distinctNumbers[position]].url)
-            3 -> (holder as HomeViewHolder4).bind(arrayList[distinctNumbers[position]].url)
+
+
+        when (getViewType(position)) {
+            ITEM -> {
+                when (position % 4) {
+                    0 -> (holder as HomeViewHolder1).bind(arrayList[distinctNumbers[position]].url!!)
+                    1 -> (holder as HomeViewHolder2).bind(arrayList[distinctNumbers[position]].url!!)
+                    2 -> (holder as HomeViewHolder3).bind(arrayList[distinctNumbers[position]].url!!)
+                    3 -> (holder as HomeViewHolder4).bind(arrayList[distinctNumbers[position]].url!!)
+                    else -> throw IllegalArgumentException("Invalid view type")
+                }
+            }
+
+            LOADING -> {}
         }
     }
 
@@ -115,7 +121,11 @@ class HomeRVAdapterNew(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return position % 4
+        return if (position == arrayList.size - 1 && isLoadingAdded) LOADING else position % 4
+    }
+
+    private fun getViewType(position: Int): Int {
+        return if (position == arrayList.size - 1 && isLoadingAdded) LOADING else ITEM
     }
 
     inner class HomeViewHolder1(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -142,7 +152,10 @@ class HomeRVAdapterNew(
             )
             editTv.setOnClickListener {
                 val intent = Intent(context, EditDesignActivity::class.java)
-                intent.putExtra(IntentConstants.IMG_URL, arrayList[distinctNumbers[layoutPosition]].url)
+                intent.putExtra(
+                    IntentConstants.IMG_URL,
+                    arrayList[distinctNumbers[layoutPosition]].url
+                )
                 intent.putExtra(IntentConstants.SELECTED_PAGE, 0)
                 context.startActivity(intent)
             }
@@ -174,7 +187,10 @@ class HomeRVAdapterNew(
             )
             editTv.setOnClickListener {
                 val intent = Intent(context, EditDesignActivity::class.java)
-                intent.putExtra(IntentConstants.IMG_URL, arrayList[distinctNumbers[layoutPosition]].url)
+                intent.putExtra(
+                    IntentConstants.IMG_URL,
+                    arrayList[distinctNumbers[layoutPosition]].url
+                )
                 intent.putExtra(IntentConstants.SELECTED_PAGE, 1)
                 context.startActivity(intent)
             }
@@ -208,7 +224,10 @@ class HomeRVAdapterNew(
             )
             editTv.setOnClickListener {
                 val intent = Intent(context, EditDesignActivity::class.java)
-                intent.putExtra(IntentConstants.IMG_URL, arrayList[distinctNumbers[layoutPosition]].url)
+                intent.putExtra(
+                    IntentConstants.IMG_URL,
+                    arrayList[distinctNumbers[layoutPosition]].url
+                )
                 intent.putExtra(IntentConstants.SELECTED_PAGE, 2)
                 context.startActivity(intent)
             }
@@ -242,13 +261,22 @@ class HomeRVAdapterNew(
             )
             editTv.setOnClickListener {
                 val intent = Intent(context, EditDesignActivity::class.java)
-                intent.putExtra(IntentConstants.IMG_URL, arrayList[distinctNumbers[layoutPosition]].url)
+                intent.putExtra(
+                    IntentConstants.IMG_URL,
+                    arrayList[distinctNumbers[layoutPosition]].url
+                )
                 intent.putExtra(IntentConstants.SELECTED_PAGE, 3)
                 context.startActivity(intent)
             }
             shareTv.setOnClickListener {
                 (context as BaseActivity).viewToImage(container, "")
             }
+        }
+    }
+
+    inner class LoadingVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bind() {
+            val progressBar: ProgressBar = itemView.findViewById(R.id.progressbar)
         }
     }
 
@@ -364,7 +392,7 @@ class HomeRVAdapterNew(
         if (arrayList != null) {
             this.arrayList.addAll(arrayList)
         }
-        distinctNumbers = generateDistinctNumbers()
+        //distinctNumbers = generateDistinctNumbers()
         notifyDataSetChanged()
     }
 
@@ -374,7 +402,7 @@ class HomeRVAdapterNew(
         if (arrayList != null) {
             this.arrayList.addAll(arrayList)
         }
-        distinctNumbers = generateDistinctNumbers()
+        //distinctNumbers = generateDistinctNumbers()
         notifyDataSetChanged()
     }
 
@@ -418,5 +446,54 @@ class HomeRVAdapterNew(
             .load(url)
             .into(target)
         imageView.tag = target
+    }
+
+
+    fun add(r: ImageBean) {
+        arrayList.add(r)
+        notifyItemInserted(arrayList.size - 1)
+    }
+
+    fun addAll(moveResults: List<ImageBean>) {
+        min = max
+        max += moveResults.size
+        val distinctNumbers = generateDistinctNumbers()
+        this.distinctNumbers.addAll(distinctNumbers)
+        for (result in moveResults) {
+            add(result)
+        }
+    }
+
+    fun remove(r: ImageBean) {
+        val position: Int = arrayList.indexOf(r)
+        if (position > -1) {
+            arrayList.removeAt(position)
+            notifyItemRemoved(position)
+        }
+    }
+
+    fun clear() {
+        isLoadingAdded = false
+    }
+
+    fun isEmpty(): Boolean {
+        return itemCount == 0
+    }
+
+
+    fun addLoadingFooter() {
+        isLoadingAdded = true
+        add(ImageBean())
+    }
+
+    fun removeLoadingFooter() {
+        isLoadingAdded = false
+        val position: Int = arrayList.size - 1
+        arrayList.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    fun getItem(position: Int): ImageBean {
+        return arrayList[position]
     }
 }

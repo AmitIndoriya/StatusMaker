@@ -76,4 +76,6 @@
     <color name="whiteDark">#F3F3F3</color>
     <color name="purple">#993399</color>
     <color name="purpleDark">#663399</color>
+    <color name="kprogresshud_grey_color">#449E9E9E</color>
+    <color name="kprogresshud_default_color">#b1000000</color>
 </resources>

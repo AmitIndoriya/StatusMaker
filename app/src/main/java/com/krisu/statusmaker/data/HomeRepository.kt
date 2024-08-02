@@ -1,6 +1,7 @@
 package com.krisu.statusmaker.data
 
 
+import android.util.Log
 import com.krisu.statusmaker.data.remote.RemoteDataSource
 import com.krisu.statusmaker.model.BaseApiResponse
 import com.krisu.statusmaker.model.CategoryResponse
@@ -31,7 +32,12 @@ class HomeRepository @Inject constructor(
             emit(safeApiCall { remoteDataSource.getAllImages(langCode) })
         }.flowOn(Dispatchers.IO)
     }
-
+    suspend fun getAllImages(page: Int,  size: Int): Flow<NetworkResult<GetAllmagesResponse>> {
+        return flow {
+            emit(safeApiCall {
+                remoteDataSource.getAllImages(page,size) })
+        }.flowOn(Dispatchers.IO)
+    }
     suspend fun getImagesByCatId(
         id: String,
         langCode: String
@@ -40,5 +46,12 @@ class HomeRepository @Inject constructor(
             emit(safeApiCall { remoteDataSource.getImagesByCatId(id, langCode) })
         }.flowOn(Dispatchers.IO)
     }
-
+    suspend fun getImagesBySubCatId(
+        id: String,
+        langCode: String
+    ): Flow<NetworkResult<GetAllmagesResponse>> {
+        return flow {
+            emit(safeApiCall { remoteDataSource.getImagesBySubCatId(id, langCode) })
+        }.flowOn(Dispatchers.IO)
+    }
 }

@@ -78,8 +78,7 @@ class CreateStatusViewModel @Inject constructor
         MutableLiveData()
     val imageListLD: MutableLiveData<ArrayList<ImageBean>> = MutableLiveData()
 
-    fun
-            fetchCategories(langCode: String) = viewModelScope.launch {
+    fun fetchCategories(langCode: String) = viewModelScope.launch {
         repository.getCategories(langCode).collect { values ->
             categoryResponse.value = values
         }
@@ -92,10 +91,8 @@ class CreateStatusViewModel @Inject constructor
                 ImageBean(
                     id = "1",
                     url = imagesUrl[i],
-                    categoryId = "",
                     categoryName = "",
                     langCode = "",
-                    specificDate = ""
                 )
             )
         }
@@ -108,6 +105,7 @@ class CreateStatusViewModel @Inject constructor
             catImageResponse.value = values
         }
     }
+
     fun getColorList(): IntArray {
         return intArrayOf(
             R.color.color1,

@@ -39,8 +39,12 @@ class CategoryAdapter(
             holder.catName.setTextColor(context.resources.getColor(R.color.gray_A9A9A9))
         }
         holder.root.setOnClickListener {
-            context.selectedCategory = position
-            context.fetchImagesById(catList[position].categoryId)
+            if (context.selectedCategory != position) {
+                context.selectedCategory = position
+                context.fetchImagesById(catList[position].categoryId,catList[position].parentCateId)
+            }else{
+                context.dismissCategoryBottomSheet()
+            }
         }
     }
 
