@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.krisu.statusmaker.R
 import com.krisu.statusmaker.model.CategoryBean
 import com.krisu.statusmaker.ui.activity.HomeActivity
+import com.krisu.statusmaker.ui.activity.HomeActivityNew
 
 class CategoryAdapter(
     private val context: Context,
@@ -30,7 +31,7 @@ class CategoryAdapter(
     @SuppressLint("UseCompatLoadingForDrawables", "NotifyDataSetChanged")
     override fun onBindViewHolder(holder: CourseViewHolder, position: Int) {
         holder.catName.text = catList[position].categoryName
-        if (position == (context as HomeActivity).selectedCategory) {
+        if (position == (context as HomeActivityNew).selectedCategory) {
             holder.root.background =
                 context.resources.getDrawable(R.drawable.rect_white_with_green_border25)
             holder.catName.setTextColor(context.resources.getColor(R.color.green_008000))
@@ -41,9 +42,13 @@ class CategoryAdapter(
         holder.root.setOnClickListener {
             if (context.selectedCategory != position) {
                 context.selectedCategory = position
-                context.fetchImagesById(catList[position].categoryId,catList[position].parentCateId)
-            }else{
-                context.dismissCategoryBottomSheet()
+                context.fetchImagesById(
+                    catList[position].categoryId,
+                    catList[position].parentCateId
+                )
+                notifyDataSetChanged()
+            } else {
+                //context.dismissCategoryBottomSheet()
             }
         }
     }

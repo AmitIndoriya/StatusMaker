@@ -23,7 +23,7 @@ class SplashActivity : BaseActivity() {
     private fun attachViewModel() {
         if (!TextUtils.isEmpty(Utils.getStringInSP(this, PreferenceConstant.PROFILE_NAME))) {
             Handler().postDelayed({
-                val intent = Intent(this@SplashActivity, HomeActivity::class.java)
+                val intent = Intent(this@SplashActivity, HomeActivityNew::class.java)
                 startActivity(intent)
                 finish()
             }, 2000)

@@ -34,6 +34,7 @@ interface ApiService {
     @GET(Constants.GETCATEGORIESNEW)
     suspend fun getAllImages(
         @Query("page") page: Int,
-        @Query("size") size: Int
+        @Query("size") size: Int,
+        @Query("time") time: Long,
     ): Response<GetAllmagesResponse>
 }

@@ -32,12 +32,19 @@ class HomeRepository @Inject constructor(
             emit(safeApiCall { remoteDataSource.getAllImages(langCode) })
         }.flowOn(Dispatchers.IO)
     }
-    suspend fun getAllImages(page: Int,  size: Int): Flow<NetworkResult<GetAllmagesResponse>> {
+
+    suspend fun getAllImages(
+        page: Int,
+        size: Int,
+        time: Long
+    ): Flow<NetworkResult<GetAllmagesResponse>> {
         return flow {
             emit(safeApiCall {
-                remoteDataSource.getAllImages(page,size) })
+                remoteDataSource.getAllImages(page, size, time)
+            })
         }.flowOn(Dispatchers.IO)
     }
+
     suspend fun getImagesByCatId(
         id: String,
         langCode: String
@@ -46,6 +53,7 @@ class HomeRepository @Inject constructor(
             emit(safeApiCall { remoteDataSource.getImagesByCatId(id, langCode) })
         }.flowOn(Dispatchers.IO)
     }
+
     suspend fun getImagesBySubCatId(
         id: String,
         langCode: String

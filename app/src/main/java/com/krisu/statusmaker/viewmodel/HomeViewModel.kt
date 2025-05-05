@@ -17,6 +17,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.io.IOException
 import java.net.URL
@@ -35,9 +38,26 @@ class HomeViewModel @Inject constructor
 
 
     fun fetchCategories(langCode: String) = viewModelScope.launch {
-        categoryResponse.value=NetworkResult.Loading()
+        categoryResponse.value = NetworkResult.Loading()
         repository.getCategories(langCode).collect { values ->
             categoryResponse.value = values
+        }
+    }
+
+    fun fetchCatAndImgTogether(page: Int, size: Int, time: Long, langCode: String) {
+        viewModelScope.launch {
+            categoryResponse.value = NetworkResult.Loading()
+            // _movieTitle.postValue(DataState.Init)
+            val resultA = async { repository.getCategories(langCode) }
+            val resultB = async { repository.getAllImages(page, size, time) }
+            val result = awaitAll(resultA, resultB)
+
+            (result[1] as Flow<NetworkResult<GetAllmagesResponse>>).collect { values ->
+                allImageResponse.value = values
+            }
+            (result[0] as Flow<NetworkResult<CategoryResponse>>).collect { values ->
+                categoryResponse.value = values
+            }
         }
     }
 
@@ -46,21 +66,23 @@ class HomeViewModel @Inject constructor
             allImageResponse.value = values
         }
     }
-    fun fetchImages(page: Int,  size: Int) = viewModelScope.launch {
-        allImageResponse.value=NetworkResult.Loading()
-        repository.getAllImages(page,  size).collect { values ->
+
+    fun fetchImages(page: Int, size: Int, time: Long) = viewModelScope.launch {
+        allImageResponse.value = NetworkResult.Loading()
+        repository.getAllImages(page, size, time).collect { values ->
             allImageResponse.value = values
         }
     }
 
     fun fetchImagesByCatId(id: String, langCode: String) = viewModelScope.launch {
-        catImageResponse.value=NetworkResult.Loading()
+        catImageResponse.value = NetworkResult.Loading()
         repository.getImagesByCatId(id, langCode).collect { values ->
             catImageResponse.value = values
         }
     }
+
     fun fetchImagesBySubCatId(id: String, langCode: String) = viewModelScope.launch {
-        catImageResponse.value=NetworkResult.Loading()
+        catImageResponse.value = NetworkResult.Loading()
         repository.getImagesBySubCatId(id, langCode).collect { values ->
             catImageResponse.value = values
         }

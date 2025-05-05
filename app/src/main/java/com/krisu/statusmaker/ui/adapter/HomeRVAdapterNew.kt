@@ -26,7 +26,7 @@ import com.krisu.statusmaker.R
 import com.krisu.statusmaker.model.ImageBean
 import com.krisu.statusmaker.ui.activity.BaseActivity
 import com.krisu.statusmaker.ui.activity.EditDesignActivity
-import com.krisu.statusmaker.ui.activity.HomeActivity
+import com.krisu.statusmaker.ui.activity.HomeActivityNew
 import com.krisu.statusmaker.utils.IntentConstants
 import com.krisu.statusmaker.utils.PreferenceConstant
 import com.krisu.statusmaker.utils.Utils
@@ -72,22 +72,22 @@ class HomeRVAdapterNew(
             return when (viewType % 4) {
                 0 -> HomeViewHolder1(
                     LayoutInflater.from(parent.context)
-                        .inflate(R.layout.list_item_home1, parent, false)
+                        .inflate(R.layout.list_item_home_new1, parent, false)
                 )
 
                 1 -> HomeViewHolder2(
                     LayoutInflater.from(parent.context)
-                        .inflate(R.layout.list_item_home2, parent, false)
+                        .inflate(R.layout.list_item_home_new2, parent, false)
                 )
 
                 2 -> HomeViewHolder3(
                     LayoutInflater.from(parent.context)
-                        .inflate(R.layout.list_item_home3, parent, false)
+                        .inflate(R.layout.list_item_home_new3, parent, false)
                 )
 
                 3 -> HomeViewHolder4(
                     LayoutInflater.from(parent.context)
-                        .inflate(R.layout.list_item_home4, parent, false)
+                        .inflate(R.layout.list_item_home_new4, parent, false)
                 )
 
                 else -> throw IllegalArgumentException("Invalid view type")
@@ -286,7 +286,7 @@ class HomeRVAdapterNew(
             val avatarId = Utils.getIntInSP(context, PreferenceConstant.AVATAR_ID)
             if (avatarId != -1) {
                 imageView.setImageDrawable(
-                    (context as HomeActivity).viewModel.avatarListLD.value?.get(
+                    (context as HomeActivityNew).viewModel.avatarListLD.value?.get(
                         avatarId
                     )?.drawable
                 )
@@ -343,7 +343,8 @@ class HomeRVAdapterNew(
     private fun setupTransparentColor(
         swatch: Palette.Swatch?, linearLayout: LinearLayout, drawable: Int
     ) {
-        val color = swatch?.rgb ?: ContextCompat.getColor(context, R.color.white)
+        val color = swatch?.rgb ?: ContextCompat.getColor(context, R.color.color22)
+        Log.i("color","=="+color+"----"+ R.color.white)
         val generatedColor = generateTransparentColor(color, 0.4)
         val unwrappedDrawable = AppCompatResources.getDrawable(context, drawable)
         val wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable!!)
@@ -355,7 +356,7 @@ class HomeRVAdapterNew(
     private fun setupColorProfileBg(
         swatch: Palette.Swatch?, imageView: ImageView, drawable: Int
     ) {
-        val color = swatch?.rgb ?: ContextCompat.getColor(context, R.color.white)
+        val color = swatch?.rgb ?: ContextCompat.getColor(context, R.color.color22)
         val unwrappedDrawable = AppCompatResources.getDrawable(context, drawable)
         val wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable!!)
         DrawableCompat.setTint(wrappedDrawable, color)
@@ -371,7 +372,7 @@ class HomeRVAdapterNew(
     private fun setupColorProfileText(
         swatch: Palette.Swatch?, view: LinearLayout, drawable: Int
     ) {
-        val color = swatch?.rgb ?: ContextCompat.getColor(context, R.color.white)
+        val color = swatch?.rgb ?: ContextCompat.getColor(context, R.color.color22)
         val generatedColor = generateTransparentColor(color, 0.4)
         val unwrappedDrawable = AppCompatResources.getDrawable(context, drawable)
         val wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable!!)

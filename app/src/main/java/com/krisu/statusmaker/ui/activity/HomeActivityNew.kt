@@ -8,17 +8,19 @@ import android.os.Handler
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
-import android.view.View.OnClickListener
-import android.widget.RelativeLayout
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.PagerSnapHelper
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.material.navigation.NavigationBarView
 import com.krisu.statusmaker.R
-import com.krisu.statusmaker.databinding.ActHomeLayoutBinding
+import com.krisu.statusmaker.databinding.ActHomeLayoutNewBinding
 import com.krisu.statusmaker.model.CategoryBean
 import com.krisu.statusmaker.model.ImageBean
+import com.krisu.statusmaker.ui.adapter.CategoryAdapter
 import com.krisu.statusmaker.ui.adapter.HomeRVAdapterNew
-import com.krisu.statusmaker.ui.dialog.CategoryBottomSheet
 import com.krisu.statusmaker.utils.NetworkResult
 import com.krisu.statusmaker.utils.PaginationScrollListener
 import com.krisu.statusmaker.utils.PreferenceConstant
@@ -29,12 +31,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 
 @AndroidEntryPoint
-class HomeActivity : BaseActivity(), OnClickListener {
-    lateinit var binding: ActHomeLayoutBinding
+class HomeActivityNew : BaseActivity(), View.OnClickListener {
+    lateinit var binding: ActHomeLayoutNewBinding
     val viewModel by viewModels<HomeViewModel>()
     lateinit var adapter: HomeRVAdapterNew
     var selectedCategory = 0
-    private lateinit var categoryBottomSheet: CategoryBottomSheet
     private val PAGE_START = 0
     private var isLoadingPage = false
     private var isLastPage1 = false
@@ -44,29 +45,68 @@ class HomeActivity : BaseActivity(), OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setFullScreen()
-        binding = ActHomeLayoutBinding.inflate(layoutInflater)
+        binding = ActHomeLayoutNewBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setBottomNavigationListener()
+        addObservers()
         setToolbarMargin()
-        fetchData()
+        setBottomMargin()
+        fetchCatAndImgTogether()
         setListeners()
         setProfileData()
-        setBottomMargin()
-        addObservers()
     }
 
-    private fun setListeners() {
-        binding.catIv.setOnClickListener(this)
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        setProfileData()
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun setToolbarMargin() {
+        binding.toolbarLl.setPadding(0, getStatusBarHeight(), 0, 0)
+    }
+
+    private fun setBottomMargin() {
+        binding.root.setPadding(0, 0, 0, getNavigationBarHeight())
+    }
+
+    private fun setProfileData() {
+        if (Utils.getBooleanInSP(this, PreferenceConstant.IS_AVATAR_SELECTED)) {
+            viewModel.getAvatarList()
+        } else {
+            if (!TextUtils.isEmpty(Utils.getStringInSP(this, PreferenceConstant.PROFILE_IMG))) {
+                Picasso.with(this).load(Utils.getStringInSP(this, PreferenceConstant.PROFILE_IMG))
+                    .into(binding.profileIv)
+            }
+        }
+    }
+
+    fun setListeners() {
         binding.profileIv.setOnClickListener(this)
         binding.createTv.setOnClickListener(this)
         binding.shareAppIv.setOnClickListener(this)
+        binding.bottomNavigation.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.item_1 -> startActivity(
+                    Intent(
+                        this@HomeActivityNew,
+                        CreateStatusActivity::class.java
+                    )
+                )
 
-        binding.recyclerview.addOnScrollListener(object : PaginationScrollListener(layoutManager) {
+                R.id.item_2 -> shareApp()
+            }
+            true
+        }
+        binding.recyclerView1.addOnScrollListener(object : PaginationScrollListener(layoutManager) {
             override fun loadMoreItems() {
                 if (!isLastPage1 && !isLoadingPage && selectedCategory == 0) {
                     isLoadingPage = true
                     Handler().postDelayed({
                         currentPage++
                         fetchImages(currentPage)
+                        Log.i("currentPage", "--$currentPage")
 
                     }, 1000)
                 }
@@ -87,6 +127,48 @@ class HomeActivity : BaseActivity(), OnClickListener {
         })
     }
 
+    private fun setBottomNavigationListener() {
+        NavigationBarView.OnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.item_1 -> {
+                    true
+                }
+
+                R.id.item_2 -> {
+                    true
+                }
+
+                else -> false
+            }
+        }
+    }
+
+    private fun fetchCatAndImgTogether() {
+        try {
+            viewModel.fetchCatAndImgTogether(
+                currentPage,
+                10,
+                Calendar.getInstance().timeInMillis,
+                "2"
+            )
+        } catch (e: Exception) {
+            Log.i("Exception", e.message.toString())
+        }
+    }
+
+    private fun fetchCategories() {
+        try {
+            viewModel.fetchCategories("2")
+        } catch (e: Exception) {
+            Log.i("Exception", e.message.toString())
+        }
+
+    }
+
+    private fun fetchImages(page: Int = 0) {
+        viewModel.fetchImages(page, 10, Calendar.getInstance().timeInMillis)
+    }
+
     private fun addObservers() {
         viewModel.avatarListLD.observe(this) {
             val avatarId = Utils.getIntInSP(this, PreferenceConstant.AVATAR_ID)
@@ -94,39 +176,12 @@ class HomeActivity : BaseActivity(), OnClickListener {
                 binding.profileIv.setImageDrawable(it[avatarId]?.drawable)
             }
         }
-    }
-
-    private fun setProfileData() {
-        if (Utils.getBooleanInSP(this, PreferenceConstant.IS_AVATAR_SELECTED)) {
-            viewModel.getAvatarList()
-        } else {
-            if (!TextUtils.isEmpty(Utils.getStringInSP(this, PreferenceConstant.PROFILE_IMG))) {
-                Picasso.with(this).load(Utils.getStringInSP(this, PreferenceConstant.PROFILE_IMG))
-                    .into(binding.profileIv)
-            }
-        }
-    }
-
-    private fun setBottomMargin() {
-        val layoutParams = binding.recyclerview.layoutParams as RelativeLayout.LayoutParams
-        layoutParams.bottomMargin = getNavigationBarHeight()
-        binding.recyclerview.layoutParams = layoutParams
-
-    }
-
-    private fun setToolbarMargin() {
-        binding.toolbarLl.setPadding(0, getStatusBarHeight(), 0, 0)
-    }
-
-    private fun fetchData() {
-        fetchImages(currentPage)
         viewModel.categoryResponse.observe(this) { response ->
             when (response) {
                 is NetworkResult.Success -> {
                     hideProgressbar()
                     response.data?.let {
-                        categoryBottomSheet = CategoryBottomSheet.getInstance(it.data)
-                        categoryBottomSheet.show(supportFragmentManager, "categoryBottomSheet")
+                        setCategoryRVData(it.data)
                     }
                 }
 
@@ -183,16 +238,15 @@ class HomeActivity : BaseActivity(), OnClickListener {
                 is NetworkResult.Success -> {
                     hideProgressbar()
                     response.data?.let {
-                        //replaceItem(it.data)
-                        try{
-                            binding.recyclerview.adapter = null
-                            if (binding.recyclerview.adapter == null) {
+                        try {
+                            Log.i("cat_response","cat_response")
+                            binding.recyclerView1.adapter = null
+                            if (binding.recyclerView1.adapter == null) {
                                 setRVAdapter(it.data)
                             }
-                        }catch(_:Exception){
+                        } catch (_: Exception) {
 
                         }
-
                     }
                 }
 
@@ -207,16 +261,50 @@ class HomeActivity : BaseActivity(), OnClickListener {
         }
     }
 
-    private fun fetchCategories() {
-        viewModel.fetchCategories("2")
+    private fun setCategoryRVData(arrayList: ArrayList<CategoryBean>) {
+        val flexboxLayoutManager = FlexboxLayoutManager(this)
+        flexboxLayoutManager.flexDirection = FlexDirection.ROW
+        flexboxLayoutManager.flexWrap = FlexWrap.WRAP
+        val adapter = CategoryAdapter(this, arrayList)
+        binding.recyclerview.layoutManager = flexboxLayoutManager
+        binding.recyclerview.adapter = adapter
     }
 
-    private fun fetchImages(page: Int = 0) {
-        viewModel.fetchImages(page, 10, Calendar.getInstance().timeInMillis)
+    private fun fetchData() {
+        fetchImages(currentPage)
+    }
+
+    private fun setRVAdapter(arrayList: ArrayList<ImageBean>) {
+        val bitmapList = ArrayList<Bitmap>()
+        binding.recyclerView1.layoutManager = layoutManager
+        adapter = HomeRVAdapterNew(this, arrayList, bitmapList)
+        binding.recyclerView1.adapter = adapter
+        val snapHelper = PagerSnapHelper()
+        snapHelper.attachToRecyclerView(binding.recyclerView1)
+    }
+
+    override fun onClick(v: View) {
+        when (v.id) {
+            R.id.cat_iv -> {
+                fetchCategories()
+            }
+
+            R.id.profile_iv -> {
+                startActivityForResult(Intent(this, ProfileActivity::class.java), 101)
+            }
+
+            R.id.create_tv -> {
+                startActivity(Intent(this@HomeActivityNew, CreateStatusActivity::class.java))
+            }
+
+            R.id.share_app_iv -> {
+                shareApp()
+            }
+        }
     }
 
     fun fetchImagesById(id: Int, parentCateId: Int) {
-
+        Log.i("parentCateId",""+parentCateId)
         when (parentCateId) {
             0 -> {
                 fetchImages(currentPage)
@@ -238,66 +326,5 @@ class HomeActivity : BaseActivity(), OnClickListener {
                 viewModel.fetchImagesByCatId(id.toString(), "2")
             }
         }
-        dismissCategoryBottomSheet()
-    }
-
-    fun dismissCategoryBottomSheet() {
-        categoryBottomSheet.dismiss()
-    }
-
-    private fun setRVAdapter(arrayList: ArrayList<ImageBean>) {
-        val bitmapList = ArrayList<Bitmap>()
-        binding.recyclerview.layoutManager = layoutManager
-        adapter = HomeRVAdapterNew(this, arrayList, bitmapList)
-        binding.recyclerview.adapter = adapter
-    }
-
-    private fun addItem(arrayList: ArrayList<ImageBean>?, bitmapList: ArrayList<Bitmap>?) {
-        adapter.addItem(arrayList, bitmapList)
-    }
-
-    private fun replaceItem(arrayList: ArrayList<ImageBean>?) {
-        adapter.replaceItem(arrayList)
-    }
-
-    override fun onClick(v: View) {
-        when (v.id) {
-            R.id.cat_iv -> {
-                fetchCategories()
-            }
-
-            R.id.profile_iv -> {
-                startActivityForResult(Intent(this, ProfileActivity::class.java), 101)
-            }
-
-            R.id.create_tv -> {
-                startActivity(Intent(this@HomeActivity, CreateStatusActivity::class.java))
-            }
-
-            R.id.share_app_iv -> {
-                shareApp()
-            }
-
-        }
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    @Deprecated(
-        "Deprecated in Java",
-        ReplaceWith("super.onActivityResult(requestCode, resultCode, data)")
-    )
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        /* if (requestCode == 101 && resultCode == RESULT_OK) {
-             setProfileData()
-             adapter.notifyDataSetChanged()
-         }*/
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        setProfileData()
-        adapter.notifyDataSetChanged()
     }
 }

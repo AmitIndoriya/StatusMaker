@@ -92,7 +92,7 @@ class ProfileActivity : BaseActivity(), OnClickListener {
             finish()
         }
         binding.skipBtn.setOnClickListener {
-            val intent = Intent(this, HomeActivity::class.java)
+            val intent = Intent(this, HomeActivityNew::class.java)
             startActivity(intent)
             finish()
         }
@@ -119,7 +119,7 @@ class ProfileActivity : BaseActivity(), OnClickListener {
                    returnIntent.putExtra("mobile_number", binding.phoneNumberEt.text.toString())
                    returnIntent.putExtra("img_url", Utils.getStringInSP(this, "img_url"))*//*
                 setResult(RESULT_OK, returnIntent)*/
-                val intent = Intent(this, HomeActivity::class.java)
+                val intent = Intent(this, HomeActivityNew::class.java)
                 startActivity(intent)
                 finish()
             }
